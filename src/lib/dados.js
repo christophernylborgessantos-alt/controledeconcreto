@@ -77,7 +77,7 @@ export function criarDados(cliente) {
         todos(c.from('notas').select('id,obra_id,local_id,numero,data,fck,slump,volume,observacoes,versao,nao_estrutural,ensaios(idade,esperado,resultado_1,resultado_2)'))
       ]);
       return {obras:obras.sort((a,b)=>a.nome.localeCompare(b.nome)),locais:locais.map(l=>({...l,teorico:l.teorico===null?null:Number(l.teorico)})),notas:notas.map(n=>{
-        const porIdade=Object.fromEntries(n.ensaios.map(e=>[e.idade,{esperado:e.esperado===null?null:Number(e.esperado),resultados:[e.resultado_1,e.resultado_2].map(v=>v===null?null:Number(v))}]));
+        const porIdade=Object.fromEntries(n.ensaios.map(e=>[e.idade,{esperado:Number(n.fck),resultados:[e.resultado_1,e.resultado_2].map(v=>v===null?null:Number(v))}]));
         if (idades.some(i=>!porIdade[i])) throw Error('Esta nota está sem uma idade de ensaio. Solicite a conferência do cadastro.');
         return {...n,volume:Number(n.volume),fck:Number(n.fck),ensaios:porIdade};
       })};
@@ -87,8 +87,9 @@ export function criarDados(cliente) {
       return conferir(conectar().rpc('salvar_nota',{p_nota:{id:nota.id,obra_id:nota.obra_id,local_id:nota.local_id,numero:nota.numero.trim(),data:nota.data,fck:nota.fck,slump:nota.slump,volume:nota.volume},p_versao:nota.versao??null}));
     },
     async salvarEnsaios(nota) {
-      validarResistencias(nota.ensaios);
-      return conferir(conectar().rpc('salvar_ensaios',{p_id:nota.id,p_versao:nota.versao,p_ensaios:{...nota.ensaios,nao_estrutural:nota.nao_estrutural===true},p_observacoes:nota.observacoes}));
+      const ensaios=Object.fromEntries(idades.map(idade=>[idade,{...nota.ensaios[idade],esperado:nota.fck}]));
+      validarResistencias(ensaios);
+      return conferir(conectar().rpc('salvar_ensaios',{p_id:nota.id,p_versao:nota.versao,p_ensaios:{...ensaios,nao_estrutural:nota.nao_estrutural===true},p_observacoes:nota.observacoes}));
     },
     async excluirNota(nota){
       return conferir(conectar().rpc('excluir_nota',{p_id:nota.id,p_versao:nota.versao}));

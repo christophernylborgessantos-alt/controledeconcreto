@@ -19,7 +19,7 @@ function consulta(lista,error=null){return {
 const leitura = modulo.criarDados({from: tabela => ({select: () => consulta(tabelas[tabela])})});
 const resultado = await leitura.carregar();
 assert.equal(resultado.notas[0].volume,0.1);
-assert.deepEqual(resultado.notas[0].ensaios[7],{esperado:null,resultados:[0,null]});
+assert.deepEqual(resultado.notas[0].ensaios[7],{esperado:30,resultados:[0,null]});
 const falha = modulo.criarDados({from: () => ({select: () => consulta(null,{message:'rede'})})});
 await assert.rejects(falha.carregar(), /Não foi possível/);
 console.log('Dados: conflito, erros de leitura, zero e null verificados.');
@@ -57,8 +57,9 @@ await renomear.salvarLocal({id:'local',nome:'Novo nome',obra_id:'obra',teorico:1
 assert.equal(Object.hasOwn(camposRenomeados,'teorico'),false,'Renomear não altera o teórico do local');
 let enviado;
 const classificacao=modulo.criarDados({rpc:async(_nome,args)=>{enviado=args;return {data:'n',error:null}}});
-await classificacao.salvarEnsaios({id:'n',versao:1,nao_estrutural:true,observacoes:'',ensaios:Object.fromEntries([7,28,63].map(i=>[i,{esperado:null,resultados:[null,null]}]))});
+await classificacao.salvarEnsaios({id:'n',fck:30,versao:1,nao_estrutural:true,observacoes:'',ensaios:Object.fromEntries([7,28,63].map(i=>[i,{esperado:1,resultados:[null,null]}]))});
 assert.equal(enviado.p_ensaios.nao_estrutural,true);
+for(const idade of [7,28,63])assert.equal(enviado.p_ensaios[idade].esperado,30);
 assert.equal(typeof dados.excluirObra,'function');
 await assert.rejects(dados.excluirObra({id:'o',nome:'Obra'}),/Recarregue/);
 await classificacao.excluirObra({id:'o',nome:'Obra'});

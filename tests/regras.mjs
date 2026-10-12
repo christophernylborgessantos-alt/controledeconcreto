@@ -19,12 +19,12 @@ for(const idade of [7,28,63])assert.equal(situacao({resultados:[null,null]},'202
 assert.equal(baixo({esperado:30,resultados:[1,2]},true),false);
 assert.equal(situacao({resultados:[null,null]},'2020-01-01',7,'2026-10-12',false),'Vencido');
 const {opcional63,situacaoNota,resumoEnsaios}=await import('../src/lib/regras.js');
-const aprovada={data:'2020-01-01',fck:50,ensaios:{7:{esperado:20,resultados:[20,20]},28:{esperado:30,resultados:[30,31]},63:{esperado:35,resultados:[null,null]}}};
-assert.equal(opcional63(aprovada),true,'Igualdade atinge Esperado, independentemente do FCK');
+const aprovada={data:'2020-01-01',fck:30,ensaios:{7:{esperado:20,resultados:[20,20]},28:{esperado:30,resultados:[30,31]},63:{esperado:35,resultados:[null,null]}}};
+assert.equal(opcional63(aprovada),true,'Igualdade atinge o FCK da nota');
 assert.equal(situacaoNota(aprovada,63,'2026-10-12'),'Opcional');
 assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[29,35]}}}),false,'Média não substitui os dois resultados');
 assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[30,null]}}}),true);
-assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:null,resultados:[30,31]}}}),false);
+assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:null,resultados:[30,31]}}}),true);
 assert.equal(situacaoNota({...aprovada,nao_estrutural:true},63),'Não necessário');
 const resumoIdades=resumoEnsaios([aprovada,{...aprovada,nao_estrutural:true}],'2026-10-12');
 assert.equal(resumoIdades[63].obrigatorios,0);assert.equal(resumoIdades[63].opcionais,1);assert.equal(resumoIdades[63].vencidos,0);assert.equal(resumoIdades[63].dispensados,1);
@@ -42,3 +42,6 @@ assert.equal(contagens.obrigatorios,1);assert.equal(contagens.opcionais,2);asser
 for(const idade of [7,28,63])assert.equal(situacao({resultados:[null,30]},'2020-01-01',idade,'2026-10-12'),'Preenchido');
 assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[null,null]}}}),false);
 assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[29,null]}}}),false);
+
+assert.equal(opcional63({...aprovada,fck:50}),false,'Esperado manual antigo não substitui o FCK');
+assert.equal(opcional63({...aprovada,fck:undefined}),false);

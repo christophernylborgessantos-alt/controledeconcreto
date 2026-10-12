@@ -7,7 +7,7 @@ export function baixo(e,naoEstrutural=false){return !naoEstrutural&& e.esperado!
 export function opcional63(nota){
   const e=nota.ensaios[28];
   const informados=e.resultados.filter(v=>v!==null);
-  return !nota.nao_estrutural&&Number.isFinite(e.esperado)&&informados.length>0&&informados.every(v=>Number.isFinite(v)&&v>=e.esperado);
+  return !nota.nao_estrutural&&Number.isFinite(nota.fck)&&informados.length>0&&informados.every(v=>Number.isFinite(v)&&v>=nota.fck);
 }
 export function situacaoNota(nota,idade,today=hoje()){
   const estado=situacao(nota.ensaios[idade],nota.data,idade,today,nota.nao_estrutural);
