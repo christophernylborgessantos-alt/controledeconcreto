@@ -2,8 +2,31 @@ export const idades=[7,28,63];
 export function hoje(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Sao_Paulo'}).format(new Date())}
 export function prazo(date,days){const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10)}
 export function dataBR(d){return d.split('-').reverse().join('/')}
-export function situacao(ensaio,date,age,today=hoje(),naoEstrutural=false){if(naoEstrutural)return 'Não necessário';return ensaio.resultados.every(v=>v!==null)?'Preenchido':prazo(date,age)<today?'Vencido':prazo(date,age)===today?'Vence hoje':'No prazo'}
+export function situacao(ensaio,date,age,today=hoje(),naoEstrutural=false){if(naoEstrutural)return 'Não necessário';return ensaio.resultados.some(v=>v!==null)?'Preenchido':prazo(date,age)<today?'Vencido':prazo(date,age)===today?'Vence hoje':'No prazo'}
 export function baixo(e,naoEstrutural=false){return !naoEstrutural&& e.esperado!==null&&e.resultados.some(v=>v!==null&&v<e.esperado)}
+export function opcional63(nota){
+  const e=nota.ensaios[28];
+  const informados=e.resultados.filter(v=>v!==null);
+  return !nota.nao_estrutural&&Number.isFinite(e.esperado)&&informados.length>0&&informados.every(v=>Number.isFinite(v)&&v>=e.esperado);
+}
+export function situacaoNota(nota,idade,today=hoje()){
+  const estado=situacao(nota.ensaios[idade],nota.data,idade,today,nota.nao_estrutural);
+  return idade===63&&opcional63(nota)&&estado!=='Preenchido'?'Opcional':estado;
+}
+export function resumoEnsaios(notas,today=hoje()){
+  return Object.fromEntries(idades.map(idade=>{
+    const resumo={obrigatorios:0,preenchidos:0,vencidos:0,opcionais:0,opcionaisPreenchidos:0,dispensados:0};
+    for(const nota of notas){
+      if(nota.nao_estrutural){resumo.dispensados++;continue}
+      const estado=situacaoNota(nota,idade,today);
+      if(idade===63&&opcional63(nota)){resumo.opcionais++;if(estado==='Preenchido')resumo.opcionaisPreenchidos++;continue}
+      resumo.obrigatorios++;
+      if(estado==='Preenchido')resumo.preenchidos++;
+      if(estado==='Vencido')resumo.vencidos++;
+    }
+    return [idade,resumo];
+  }));
+}
 export function total(notes){return Number(notes.reduce((s,n)=>s+n.volume,0).toFixed(6))}
 export function podeEditar(role){return ['Christopher','Analista'].includes(role)}
 export function filtrarNotas(notas,{obra,de='',ate='',local='',numero='',fck=''}){

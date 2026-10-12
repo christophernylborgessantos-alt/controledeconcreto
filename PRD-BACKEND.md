@@ -37,7 +37,7 @@ Chaves estrangeiras compostas garantem que o local da nota e a nota do ensaio pe
 
 Criar uma nota cria também suas três idades de ensaio em uma transação. Atualizar os ensaios e suas observações também é atômico. Escritas usam controle de versão da nota para recusar edição sobre dados alterados por outra pessoa, oferecendo recarregar em vez de sobrescrever silenciosamente.
 
-Datas previstas e estados de vencimento são derivados, sem armazenar um status que envelhece. Dois resultados, inclusive zero, completam a idade. Esperado ausente não gera comparação; fck não determina o esperado. Dia atual usa America/Sao_Paulo.
+Datas previstas e estados de vencimento são derivados, sem armazenar um status que envelhece. Um resultado, inclusive zero, completa a idade; segundo campo pode permanecer null. Esperado ausente não gera comparação; fck não determina o esperado. Dia atual usa America/Sao_Paulo.
 
 ## Permissões no banco
 
@@ -82,3 +82,5 @@ Antes de criar projeto, confirmar organização escolhida e consultar/apresentar
 Revisar este desenho, especialmente cadastro de obras/locais e provisionamento administrativo dos convites, antes de preparar a execução.
 
 - 12/10/2026: Ensaios com botão Peça não estrutural (aria-pressed), confirmado pelo botão Salvar ensaio. Flag notas.nao_estrutural defaultfalse, persistida na RPC salvar_ensaios junto à versão/observações/resultados, enviada como chave nao_estrutural no JSON p_ensaios; omissão por versão antiga preserva valor. Desabilita esperado/resultados7/28/63; dispensa vencidos, pendências, preenchidos e abaixo do esperado. Volumes mantidos. Relatórios identificam peça dispensada sem tabela pendente; dados históricos não são apagados. Desmarcar reativa regras e resultados. Migration20261012_nao_estrutural.sql; testes Node/renderização e SQLrollback testes/nao-estrutural.sql passaram, revisão Standards/Spec sem bloqueios.
+
+- 12/10/2026, orientação posterior: um resultado informado é suficiente aos7/28/63dias, em qualquer posição e inclusivezero; segundo ausente não é pendência. Abaixo do esperado continua destacado. Resultado63é opcional quando houver pelo menosumresultado28 e todos os resultados28informados≥Esperado28; semesperado/semresultado não dispensa, semmédiaouFCK. Corrigir28reativa obrigação63 se nãoatingir esperado. Dashboard poridade mostraobrigatórios/preenchidos/vencidos e opcionais/dispensados separados; preenchimento usa apenas obrigatórios. Optionalpreenchido preservaresultado ealertas. Atualização derivada, sem migration. As menções antigas a dois resultados obrigatórios ficam substituídas por esta regra.

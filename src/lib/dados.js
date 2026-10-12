@@ -26,7 +26,7 @@ function validarResistencias(ensaios) {
   for (const idade of idades) {
     const e=ensaios[idade];
     if (!e || e.resultados?.length!==2 || [e.esperado,...e.resultados].some(v=>v!==null&&(!Number.isFinite(v)||v<0))) {
-      throw Error('Use resistências iguais ou maiores que zero e dois resultados por idade.');
+      throw Error('Use resistências iguais ou maiores que zero; o segundo resultado de cada idade é opcional.');
     }
   }
 }
