@@ -44,3 +44,14 @@ const paginado=modulo.criarDados({from:t=>({select:()=>consulta(t==='notas'?muit
 assert.equal((await paginado.carregar()).notas.length,1001,'Relatório não pode perder notas no limite de 1000 linhas');
 assert.equal(typeof dados.excluirNota,'function');
 await assert.rejects(dados.excluirNota({id:'n',versao:1}),/Recarregue/);
+let localInserido;
+const locaisCadastro=modulo.criarDados({from:()=>({insert:campos=>{localInserido=campos;return {select:()=>({single:async()=>({data:{id:'local'},error:null})})}}})});
+await locaisCadastro.salvarLocal({nome:'Laje',obra_id:'obra',teorico:100});
+assert.deepEqual(localInserido,{nome:'Laje',obra_id:'obra',teorico:100});
+await assert.rejects(locaisCadastro.salvarLocal({nome:'Laje',obra_id:'obra',teorico:0}),/teórico/);
+await locaisCadastro.salvarLocal({nome:'Laje',obra_id:'obra'});
+assert.equal(localInserido.teorico,null,'Ausência não é zero');
+let camposRenomeados;
+const renomear=modulo.criarDados({from:()=>({update:campos=>{camposRenomeados=campos;return {eq:()=>({select:()=>({single:async()=>({data:{id:'local'},error:null})})})}}})});
+await renomear.salvarLocal({id:'local',nome:'Novo nome',obra_id:'obra',teorico:100});
+assert.equal(Object.hasOwn(camposRenomeados,'teorico'),false,'Renomear não altera o teórico do local');

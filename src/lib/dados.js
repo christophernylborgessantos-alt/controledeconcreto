@@ -107,7 +107,9 @@ export function criarDados(cliente) {
     async salvarLocal(local) {
       const nome=local.nome.trim();
       if(!nome||!local.obra_id) throw Error('Informe o nome do local e sua obra.');
-      const q=local.id?conectar().from('locais').update({nome,updated_at:new Date().toISOString()}).eq('id',local.id):conectar().from('locais').insert({nome,obra_id:local.obra_id});
+      const teorico=local.teorico??null;
+      if(!local.id&&teorico!==null&&(!Number.isFinite(teorico)||teorico<=0))throw Error('O volume teórico deve ser maior que zero, ou ficar vazio.');
+      const q=local.id?conectar().from('locais').update({nome,updated_at:new Date().toISOString()}).eq('id',local.id):conectar().from('locais').insert({nome,obra_id:local.obra_id,teorico});
       return conferir(q.select('id').single());
     }
   };

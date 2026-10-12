@@ -10,3 +10,8 @@ assert.equal(filtrarNotas(notasFiltro,{obra:'1',fck:'3'}).length,0,'FCK deve ser
 assert.equal(filtrarNotas(notasFiltro,{obra:'1',local:'l2',fck:'30'}).length,0);
 assert.equal(filtrarNotas(notasFiltro,{obra:'1',de:'2026-10-02',ate:'2026-10-02'}).length,1);
 assert.equal(filtrarNotas(notasFiltro,{obra:'1'}).length,2,'Filtros vazios mostram todas as notas da obra');
+const {resumoLocal}=await import('../src/lib/regras.js');
+const localTeorico={id:'l1',obra_id:'1',teorico:20};
+const acumulado=resumoLocal([...notasFiltro,{...notasFiltro[0],id:'d',data:'2026-10-12',volume:15}],localTeorico);
+assert.equal(acumulado.aplicado,23);assert.equal(acumulado.diferenca,3);assert.ok(Math.abs(acumulado.percentual-15)<0.000001);
+assert.deepEqual(resumoLocal(notasFiltro,{...localTeorico,teorico:null}),{aplicado:8});

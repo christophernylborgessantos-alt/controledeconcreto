@@ -32,3 +32,5 @@ O escopo demonstrativo acima é histórico. A versão atual usa login real por c
 Login e permissões reais, banco, notificações externas, exclusão e histórico ficam para etapas futuras. Confirmar aplicação versus moldagem antes de uso real. Dados não se sincronizam entre dispositivos.
 ## Aceite
 Trocar obra troca listas e totais. Alterações reaparecem ao recarregar neste navegador. Cliente não dispõe de controles de escrita. Ausência de teórico e ensaios não bloqueia nota. npm run check fecha em zero.
+
+- 12/10/2026: Cadastro de local pela nota inclui volume teórico opcional em m³, salvo no local e reutilizado nos demais lançamentos. Local existente sem teórico permite preenchê-lo na nota pelo botão Salvar volume teórico do local. Valor já salvo aparece para consulta; correções pela aba Obras. Comparativo na nota e Dashboard usa a soma de todas as notas salvas da mesma obra/local, de todas as datas. Nota em edição entra após salvar. Renomear local não altera teórico; cancelar limpa o rascunho.

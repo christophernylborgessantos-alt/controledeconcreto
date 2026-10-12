@@ -14,6 +14,10 @@ export function validarNota(n,notes){if(!n.obra_id||!n.data||!n.numero.trim()||!
 
 export function percentual(parte,todo){return todo>0?parte/todo*100:0}
 export function comparar(aplicado,teorico){return teorico===null?null:{diferenca:Number((aplicado-teorico).toFixed(6)),percentual:percentual(aplicado,teorico)-100}}
+export function resumoLocal(notas,local){
+  const aplicado=total(notas.filter(n=>n.obra_id===local.obra_id&&n.local_id===local.id));
+  return {aplicado,...comparar(aplicado,local.teorico)};
+}
 
 export function montarRelatorio(data,{obra,de='',ate=''}){
   if(de&&ate&&de>ate)throw Error('Confira o período: a data final deve ser igual ou posterior à inicial.');
