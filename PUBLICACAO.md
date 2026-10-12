@@ -26,3 +26,12 @@ Confirmação: 12/10/2026, aproximadamente 13:18 (America/Sao_Paulo).
 Migrations versionadas e já aplicadas: 20261012_esperado_7_dias.sql, 20261012_esperado_7_dias_precisao.sql e 20261012_mapeamento.sql. Mapas/imagens e itens têm RLS; escrita/exclusão via RPC exige editor ativo e vínculo à obra. Excluir mapa preserva notas; excluir obra remove seus mapas.
 
 Credenciais, arquivos gerados e capturas locais com a imagem ilustrativa ficaram fora do commit. Tabela nova no futuro exige repetir a auditoria.
+
+## Atualização — volume teórico editável, 12/10/2026
+
+Código publicado: 5cfaeea3379bd3618589dd471b638b194e71c7c8 (main).
+Deployment: dpl_6ktAZzzWPWhAHGi6LdQwEDJUniWZ, READY, domínio público vinculado sem erro. HTTP 200 e texto do ajuste conferidos no código servido.
+
+O formulário de qualquer nota permite alterar o teórico compartilhado do local; Salvar volume teórico do local atualiza todas as notas e comparativos. Vazio remove o teórico, zero/negativos rejeitados. Trocar nota/local reinicia o rascunho, e salvar a nota com alteração de teórico pendente pede salvar o teórico primeiro.
+
+npm run check passou. UI DEMO: duas notas compartilharam alteração20→30m³; aplicado13m³/desvio-17m³; troca de local, vazio, zero e proteção de rascunho conferidos. Captura: docs/verificacao/teorico-editavel.jpg. Sem alterações de schema/RLS/migrations nem dados reais de teste.
