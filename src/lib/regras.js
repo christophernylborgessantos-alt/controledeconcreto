@@ -6,6 +6,10 @@ export function situacao(ensaio,date,age,today=hoje()){return ensaio.resultados.
 export function baixo(e){return e.esperado!==null&&e.resultados.some(v=>v!==null&&v<e.esperado)}
 export function total(notes){return Number(notes.reduce((s,n)=>s+n.volume,0).toFixed(6))}
 export function podeEditar(role){return ['Christopher','Analista'].includes(role)}
+export function filtrarNotas(notas,{obra,de='',ate='',local='',numero='',fck=''}){
+  const busca=numero.trim().toLocaleLowerCase('pt-BR');
+  return notas.filter(n=>n.obra_id===obra&&(!de||n.data>=de)&&(!ate||n.data<=ate)&&(!local||n.local_id===local)&&(!busca||n.numero.toLocaleLowerCase('pt-BR').includes(busca))&&(fck===''||n.fck===Number(fck)));
+}
 export function validarNota(n,notes){if(!n.obra_id||!n.data||!n.numero.trim()||!n.local_id||!(n.volume>0)||!(n.fck>0))throw Error('Preencha obra, data, nota, local, fck e volume maior que zero.');if(notes.some(x=>x.id!==n.id&&x.obra_id===n.obra_id&&x.numero===n.numero))throw Error('Esta nota já existe nesta obra.')}
 
 export function percentual(parte,todo){return todo>0?parte/todo*100:0}
