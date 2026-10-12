@@ -7,7 +7,7 @@ const dados = modulo.criarDados(cliente);
 await assert.rejects(dados.salvarNota({id:'n',obra_id:'o',local_id:'l',numero:'1',data:'2026-10-11',volume:1,fck:30,versao:1}), /Recarregue/);
 await assert.rejects(dados.salvarEnsaios({id:'n',versao:1,ensaios:{7:{esperado:null,resultados:[-1,0]}}}), /resistências/);
 const tabelas = {
-  obras: [], locais: [], notas: [{id:'n',obra_id:'o',local_id:'l',numero:'1',volume:'0.1',fck:'30',versao:2,ensaios:[7,28,63].map(idade=>({idade,esperado:null,resultado_1:idade===7?0:null,resultado_2:null}))}],
+  obras: [], locais: [], notas: [{id:'n',obra_id:'o',local_id:'l',numero:'1',volume:'0.1',fck:'30',peca_estrutural:'Pilar P12',versao:2,ensaios:[7,28,63].map(idade=>({idade,esperado:null,resultado_1:idade===7?0:null,resultado_2:null}))}],
   ensaios: [7,28,63].map(idade => ({nota_id:'n',idade,esperado:null,resultado_1:idade===7?0:null,resultado_2:null}))
 };
 // As resistências antigas não podem ser combinadas com a versão nova da nota.
@@ -18,7 +18,7 @@ function consulta(lista,error=null){return {
 }}
 const leitura = modulo.criarDados({from: tabela => ({select: () => consulta(tabelas[tabela])})});
 const resultado = await leitura.carregar();
-assert.equal(resultado.notas[0].volume,0.1);
+assert.equal(resultado.notas[0].volume,0.1);assert.equal(resultado.notas[0].peca_estrutural,'Pilar P12');
 assert.deepEqual(resultado.notas[0].ensaios[7],{esperado:21,resultados:[0,null]});
 const falha = modulo.criarDados({from: () => ({select: () => consulta(null,{message:'rede'})})});
 await assert.rejects(falha.carregar(), /Não foi possível/);
@@ -64,3 +64,9 @@ assert.equal(typeof dados.excluirObra,'function');
 await assert.rejects(dados.excluirObra({id:'o',nome:'Obra'}),/Recarregue/);
 await classificacao.excluirObra({id:'o',nome:'Obra'});
 assert.deepEqual(enviado,{p_id:'o',p_nome:'Obra'});
+
+let notaEnviada;const pecas=modulo.criarDados({rpc:async(_nome,args)=>{notaEnviada=args.p_nota;return {data:'n',error:null}}});
+await pecas.salvarNota({id:'n',obra_id:'o',local_id:'l',numero:'1',data:'2026-10-12',volume:8,fck:30,peca_estrutural:' Pilar P12 '});
+assert.equal(notaEnviada.peca_estrutural,'Pilar P12');
+await pecas.salvarNota({id:'n',obra_id:'o',local_id:'l',numero:'1',data:'2026-10-12',volume:8,fck:30});
+assert.equal(Object.hasOwn(notaEnviada,'peca_estrutural'),false);

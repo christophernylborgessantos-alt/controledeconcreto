@@ -10,6 +10,11 @@ assert.equal(filtrarNotas(notasFiltro,{obra:'1',fck:'3'}).length,0,'FCK deve ser
 assert.equal(filtrarNotas(notasFiltro,{obra:'1',local:'l2',fck:'30'}).length,0);
 assert.equal(filtrarNotas(notasFiltro,{obra:'1',de:'2026-10-02',ate:'2026-10-02'}).length,1);
 assert.equal(filtrarNotas(notasFiltro,{obra:'1'}).length,2,'Filtros vazios mostram todas as notas da obra');
+const notasPecas=notasFiltro.map(n=>({...n,peca_estrutural:n.id==='b'?'Pilar P12':'Laje L1'}));
+assert.deepEqual(filtrarNotas(notasPecas,{obra:'1',peca:'Laje L1',numero:'123',fck:'30',local:'l1',de:'2026-10-01',ate:'2026-10-01'}).map(n=>n.id),['a']);
+assert.equal(filtrarNotas(notasPecas,{obra:'1',peca:'Laje'}).length,0,'Peça selecionada deve corresponder ao nome completo');
+assert.equal(filtrarNotas(notasFiltro,{obra:'1',peca:'Laje L1'}).length,0,'Nota antiga sem peça não corresponde à seleção');
+assert.equal(filtrarNotas(notasFiltro,{obra:'1',peca:''}).length,2,'Todas as peças inclui notas sem peça');
 const {resumoLocal}=await import('../src/lib/regras.js');
 const localTeorico={id:'l1',obra_id:'1',teorico:20};
 const acumulado=resumoLocal([...notasFiltro,{...notasFiltro[0],id:'d',data:'2026-10-12',volume:15}],localTeorico);

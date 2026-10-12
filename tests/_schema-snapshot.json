@@ -39,7 +39,8 @@
     "versao",
     "created_at",
     "updated_at",
-    "nao_estrutural"
+    "nao_estrutural",
+    "peca_estrutural"
   ],
   "ensaios": [
     "id",

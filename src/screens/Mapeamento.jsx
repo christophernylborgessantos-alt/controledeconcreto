@@ -6,6 +6,7 @@ import '../mapeamento.css';
 export default function Mapeamento({data,obra,role,commit, repositorio=dados}){
  const {listarMapas,obterMapa,salvarMapa,excluirMapa}=repositorio;
  const [mapas,setMapas]=useState([]),[mapa,setMapa]=useState(null),[erro,setErro]=useState(''),[busy,setBusy]=useState(false),[dirty,setDirty]=useState(false),[exclusao,setExclusao]=useState(false);
+ const [emBranco,setEmBranco]=useState(false);
  const can=podeEditar(role),locais=data.locais.filter(l=>l.obra_id===obra);
  const rows=mapa?.local_id&&mapa.desde&&mapa.ate&&mapa.desde<=mapa.ate?linhasMapa(data,mapa):[];
  useEffect(()=>{let atual=true;setBusy(true);listarMapas(obra).then(m=>{if(atual)setMapas(m)}).catch(e=>{if(atual)setErro(e.message)}).finally(()=>{if(atual)setBusy(false)});return()=>{atual=false}},[obra,listarMapas]);
@@ -28,11 +29,12 @@ export default function Mapeamento({data,obra,role,commit, repositorio=dados}){
  async function apagar(){setBusy(true);setErro('');try{await commit(()=>excluirMapa(mapa),'Mapa excluído. As notas foram preservadas.');setMapa(null);setDirty(false);setExclusao(false);setMapas(await listarMapas(obra))}catch(e){setErro(e.message)}finally{setBusy(false)}}
  const numero=n=>n.toLocaleString('pt-BR',{maximumFractionDigits:6});
  return <div className="mapeamento">
-  <div className="map-controls"><div className="sectionhead"><h2>Mapeamento de concreto</h2>{can&&<button className="primary" disabled={busy} onClick={novo}>Novo mapa</button>}</div>
+  <div className="map-controls"><div className="sectionhead"><h2>Mapeamento de concreto</h2><button onClick={()=>setEmBranco(true)}>Imprimir mapa em branco</button>{can&&<button className="primary" disabled={busy} onClick={novo}>Novo mapa</button>}</div>
   <label>Mapas desta obra<select disabled={busy} value={mapa?.id||''} onChange={e=>e.target.value&&abrir(e.target.value)}><option value="">Selecione um mapa</option>{mapas.map(m=><option key={m.id} value={m.id}>{m.peca} · {dataBR(m.desde)} a {dataBR(m.ate)}</option>)}</select></label>
   {!mapas.length&&!busy&&<p>Nenhum mapa cadastrado nesta obra.{can?' Clique em Novo mapa para começar.':''}</p>}
   {busy&&<p role="status">Aguarde…</p>}{erro&&<p role="alert">{erro}</p>}</div>
-  {mapa&&<article className="card map-sheet"><h1>MAPEAMENTO DE CONCRETO</h1><p className="map-work">{data.obras.find(o=>o.id===obra)?.nome}</p>
+  {emBranco&&<article className="card map-sheet map-blank"><div className="map-controls cadastro-actions"><button className="primary" onClick={()=>window.print()}>Imprimir / salvar como PDF</button><button onClick={()=>setEmBranco(false)}>Voltar aos mapas</button></div><h1>MAPEAMENTO DE CONCRETO</h1><div className="map-identification"><b>PEÇA:</b><b>LOCAL:</b></div><div className="map-blank-drawing" aria-label="Espaço em branco para o desenho de rastreabilidade"/><div className="map-table-wrap"><table className="map-table"><thead><tr>{['ITEM','DATA','NF','BETONEIRA','INÍCIO','TÉRMINO','DURAÇÃO','VOL. (m³)','VOL. ACUMULADO (m³)'].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>{Array.from({length:10},(_,i)=><tr key={i}><td>{i+1}</td>{Array.from({length:8},(_,c)=><td key={c}/>)}</tr>)}</tbody></table></div></article>}
+  {!emBranco&&mapa&&<article className="card map-sheet"><h1>MAPEAMENTO DE CONCRETO</h1><p className="map-work">{data.obras.find(o=>o.id===obra)?.nome}</p>
    <div className="map-controls formgrid"><label>Peça concretada<input maxLength={160} list="map-pecas" disabled={!can||busy} value={mapa.peca} onChange={e=>alterar({peca:e.target.value})}/><datalist id="map-pecas">{locais.map(l=><option key={l.id} value={l.nome}/>)}</datalist></label>
     <label>Local das notas<select disabled={!can||busy} value={mapa.local_id} onChange={e=>alterar({local_id:e.target.value,peca:mapa.peca||locais.find(l=>l.id===e.target.value)?.nome||''})}><option value="">Selecione o local</option>{locais.map(l=><option key={l.id} value={l.id}>{l.nome}</option>)}</select></label>
     <label>Aplicação desde<input type="date" disabled={!can||busy} value={mapa.desde} onChange={e=>alterar({desde:e.target.value})}/></label><label>Aplicação até<input type="date" min={mapa.desde} disabled={!can||busy} value={mapa.ate} onChange={e=>alterar({ate:e.target.value})}/></label>

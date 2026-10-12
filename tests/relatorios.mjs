@@ -30,3 +30,8 @@ assert.equal(regras.montarRelatorio(data,{obra:'a'}).teorico,null,'Local sem te√
 const duasLocais={...data,locais:[...data.locais,{id:'m',obra_id:'a',nome:'Viga',teorico:10.5}],notas:[...data.notas.slice(0,2),{...data.notas[0],id:'5',numero:'5',local_id:'m'}]};
 assert.equal(regras.montarRelatorio(duasLocais,{obra:'a'}).teorico,30.5);
 assert.equal(regras.montarRelatorio(duasLocais,{obra:'a',local:'m'}).teorico,10.5);
+data.notas[0].peca_estrutural='Laje L1';data.notas[1].peca_estrutural='Pilar P12';data.notas[2].peca_estrutural='Laje L1';
+const porPeca=regras.montarRelatorio(data,{obra:'a',peca:'Laje L1',de:'2026-10-11',ate:'2026-10-11',local:'l',fck:'30',numero:'1'});
+assert.deepEqual(porPeca.notas.map(n=>n.id),['1']);assert.equal(porPeca.volume,.1);assert.equal(porPeca.teorico,20);
+assert.equal(regras.montarRelatorio(data,{obra:'a',peca:'Laje'}).notas.length,0);
+assert.equal(regras.montarRelatorio(data,{obra:'a',peca:''}).notas.length,3,'Todas inclui notas antigas sem pe√ßa');

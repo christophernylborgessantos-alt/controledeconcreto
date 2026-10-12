@@ -30,9 +30,9 @@ export function resumoEnsaios(notas,today=hoje()){
 }
 export function total(notes){return Number(notes.reduce((s,n)=>s+n.volume,0).toFixed(6))}
 export function podeEditar(role){return ['Christopher','Analista'].includes(role)}
-export function filtrarNotas(notas,{obra,de='',ate='',local='',numero='',fck=''}){
+export function filtrarNotas(notas,{obra,de='',ate='',local='',numero='',fck='',peca=''}){
   const busca=numero.trim().toLocaleLowerCase('pt-BR');
-  return notas.filter(n=>n.obra_id===obra&&(!de||n.data>=de)&&(!ate||n.data<=ate)&&(!local||n.local_id===local)&&(!busca||n.numero.toLocaleLowerCase('pt-BR').includes(busca))&&(fck===''||n.fck===Number(fck)));
+  return notas.filter(n=>n.obra_id===obra&&(!de||n.data>=de)&&(!ate||n.data<=ate)&&(!local||n.local_id===local)&&(!busca||n.numero.toLocaleLowerCase('pt-BR').includes(busca))&&(fck===''||n.fck===Number(fck))&&(!peca||n.peca_estrutural===peca));
 }
 export function validarNota(n,notes){if(!n.obra_id||!n.data||!n.numero.trim()||!n.local_id||!(n.volume>0)||!(n.fck>0))throw Error('Preencha obra, data, nota, local, fck e volume maior que zero.');if(notes.some(x=>x.id!==n.id&&x.obra_id===n.obra_id&&x.numero===n.numero))throw Error('Esta nota já existe nesta obra.')}
 
@@ -43,9 +43,9 @@ export function resumoLocal(notas,local){
   return {aplicado,...comparar(aplicado,local.teorico)};
 }
 
-export function montarRelatorio(data,{obra,de='',ate='',local='',numero='',fck=''}){
+export function montarRelatorio(data,{obra,de='',ate='',local='',numero='',fck='',peca=''}){
   if(de&&ate&&de>ate)throw Error('Confira o período: a data final deve ser igual ou posterior à inicial.');
-  const notas=filtrarNotas(data.notas,{obra,de,ate,local,numero,fck})
+  const notas=filtrarNotas(data.notas,{obra,de,ate,local,numero,fck,peca})
     .sort((a,b)=>a.data.localeCompare(b.data)||a.numero.localeCompare(b.numero))
     .map(n=>({...n,local:data.locais.find(l=>l.id===n.local_id&&l.obra_id===obra)?.nome||'Local não encontrado'}));
   const locaisSelecionados=[...new Set(notas.map(n=>n.local_id))].map(id=>data.locais.find(l=>l.id===id&&l.obra_id===obra));

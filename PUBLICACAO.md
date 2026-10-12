@@ -35,3 +35,11 @@ Deployment: dpl_6ktAZzzWPWhAHGi6LdQwEDJUniWZ, READY, domínio público vinculado
 O formulário de qualquer nota permite alterar o teórico compartilhado do local; Salvar volume teórico do local atualiza todas as notas e comparativos. Vazio remove o teórico, zero/negativos rejeitados. Trocar nota/local reinicia o rascunho, e salvar a nota com alteração de teórico pendente pede salvar o teórico primeiro.
 
 npm run check passou. UI DEMO: duas notas compartilharam alteração20→30m³; aplicado13m³/desvio-17m³; troca de local, vazio, zero e proteção de rascunho conferidos. Captura: docs/verificacao/teorico-editavel.jpg. Sem alterações de schema/RLS/migrations nem dados reais de teste.
+
+## Atualização — peças, importação e mapas em branco, 12/10/2026
+
+Publicação solicitada expressamente pelo usuário. Inclui cadastro de peça estrutural por obra, importação XLSX de notas e ensaios com prévia e confirmação (NFs existentes preservadas), filtros de peça em Notas/Relatórios/Dashboard, desvio do Dashboard como teórico menos aplicado e formulário de mapa em branco com desenho e dez linhas para preenchimento à mão. Impressão/PDF e Excel acompanham os filtros correspondentes.
+
+Migrations 20261012_peca_estrutural.sql e 20261012_importacao.sql versionadas e já aplicadas via MCP. Importação exige editor ativo vinculado à obra; lote atômico, sem privilégios anônimos novos. Não foram gravados exemplos no banco real. Advisors e limites registrados em seguranca-relatorio.md e docs/importacao-dados.md.
+
+npm run check passou no estado final: build, lint e testes. SQL em rollback validou peça/importação, isolamento, permissões e reversão. UI DEMO conferiu cadastros, prévia/importação, erros, cancelamento, modelo em branco e retorno. Renderização conferiu o desvio para aplicado abaixo/acima/igual ao teórico e seletor de peças. Impressão física não executada.

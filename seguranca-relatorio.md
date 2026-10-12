@@ -71,3 +71,9 @@ RPCExcluirObra autenticada e limitada a escritor ativo vinculado à obra. Exclus
 - Permanece o aviso anterior de proteção contra senhas vazadas desativada no Auth. [Configuração](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
 - Imagens limitadas a 2 MB, carregadas só ao abrir o mapa e removidas junto ao registro; sem links públicos.
 - Tabela nova no futuro: repetir a auditoria.
+
+## Importação Excel — 12/10/2026
+
+Migration versionada 20261012_importacao.sql aplicada via MCP. Sem novas tabelas nem alteração de RLS. RPC importar_notas revoga PUBLIC/anon e concede execução a authenticated, exigindo editor ativo e acesso à obra. SQL em rollback confirmou bloqueio de Cliente, Pendente, anônimo e usuário sem vínculo, preservação de NFs existentes, isolamento e rollback do lote inválido. Nenhuma conta ou nota de teste permanente criada.
+
+Advisors: nove funções SECURITY DEFINER intencionalmente disponíveis a authenticated, com verificações internas; nenhum alerta de RLS ausente. Continua o aviso anterior de proteção contra senhas vazadas desativada. Referências e explicação constam na auditoria de Mapeamento acima. A revisão desta alteração não substitui uma nova auditoria completa de todas as tabelas.
