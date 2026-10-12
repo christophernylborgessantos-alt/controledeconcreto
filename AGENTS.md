@@ -107,3 +107,7 @@ O registro abaixo documenta a etapa anterior; o estado atual é o resumo acima.
 ### Publicação autorizada — 12/10/2026
 - Usuário solicitou expressamente publicar e registrar as alterações pendentes: relatórios unificados, esperado de 70% aos 7 dias, ensaios por nota, dashboard simplificado/imprimível e mapeamento. Esta autorização permite envio à main e publicação Vercel desta versão.
 - Revisões Standards/segurança e Spec concluídas. Risco de leitura concorrente de mapa/horários corrigido: versão conferida antes e depois da leitura paginada; teste de regressão reproduziu a falha e passou após correção. Sem bloqueios restantes.
+
+### Publicação confirmada — Mapeamento, 12/10/2026
+- Código f5bb163394873e00db5d295ee93c0abedba3ba6f enviado à main. Deployment dpl_DKBWEHiEASx3Nc3rNwpvogZwfvaC READY, domínio https://controledenotasconcreto.vercel.app/ vinculado sem erro. HTTP 200 e código público com nova aba/Dashboard/regra70% verificados.
+- PUBLICACAO.md registra alterações, migrations, validações e limitações. Guia em docs/mapeamento-concreto.md; auditoria em seguranca-relatorio.md. Capturas locais da imagem ilustrativa não enviadas. A nota de alteração local/sem publicação nas entradas anteriores descreve apenas o estado antes desta confirmação.
