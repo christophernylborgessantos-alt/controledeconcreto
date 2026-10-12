@@ -43,3 +43,7 @@ Publicação solicitada expressamente pelo usuário. Inclui cadastro de peça es
 Migrations 20261012_peca_estrutural.sql e 20261012_importacao.sql versionadas e já aplicadas via MCP. Importação exige editor ativo vinculado à obra; lote atômico, sem privilégios anônimos novos. Não foram gravados exemplos no banco real. Advisors e limites registrados em seguranca-relatorio.md e docs/importacao-dados.md.
 
 npm run check passou no estado final: build, lint e testes. SQL em rollback validou peça/importação, isolamento, permissões e reversão. UI DEMO conferiu cadastros, prévia/importação, erros, cancelamento, modelo em branco e retorno. Renderização conferiu o desvio para aplicado abaixo/acima/igual ao teórico e seletor de peças. Impressão física não executada.
+
+### Publicação confirmada — 12/10/2026
+
+Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl_DiQZudbiPiEuHvkcGqMtiZn1naNP READY, alias https://controledenotasconcreto.vercel.app/ vinculado sem erro. HTTP200 e marcadores públicos de importação, mapa em branco, filtros de peça e desvio invertido conferidos. Revisão de código contra4019ed9 sem bloqueios. Esta confirmação supera as anotações anteriores de interface local/sem publicação para cadastro de peça, importação, filtros e mapa em branco.
