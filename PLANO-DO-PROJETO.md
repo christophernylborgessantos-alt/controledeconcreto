@@ -65,3 +65,6 @@ Nada formalizado nesta etapa.
 - Dashboard: ensaios vencidos, idades abaixo do esperado, idades com dois resultados; pendências por idade e lista detalhada.
 - Filtros: obra, idade, situação e resultados abaixo do esperado ou esperado ausente. Uma notificação representa nota + idade, não cada corpo de prova.
 - No preview, referência fixa em 11/10/2026 e dados fictícios. Produção usa data atual no horário da obra. E-mail e push ainda não definidos.
+
+## Fundação do módulo controlenotasconcreto
+React + Vite, telas Notas, Obras e locais, Dashboards e Ensaios e prazos. Dados de exemplo no navegador, sem banco ou login real. Regras do projeto em AGENTS.md e telas em PRD-FRONTEND.md. Data-base de ensaios permanece provisoriamente a aplicação, até confirmação de Christopher.
