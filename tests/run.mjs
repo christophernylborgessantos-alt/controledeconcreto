@@ -1,5 +1,6 @@
 import './regras.mjs';
 import './relatorios.mjs';
+import './excel.mjs';
 import './dados.mjs';
 import './check-schema.mjs';
 import './check-grants.mjs';

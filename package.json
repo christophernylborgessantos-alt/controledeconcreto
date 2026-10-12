@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "latest",
+    "exceljs": "4.4.0",
     "react": "latest",
     "react-dom": "latest"
   },
@@ -24,5 +25,10 @@
     "eslint-plugin-react-refresh": "latest",
     "globals": "latest",
     "vite": "latest"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "11.1.1"
+    }
   }
 }
