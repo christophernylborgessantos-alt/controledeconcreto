@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {criarDados} from '../src/lib/dados.js';
+const dados=criarDados({functions:{invoke:async()=>({data:{usuarios:[{id:'u',role:'Cliente',ativo:false}]},error:null})}});
+assert.equal(typeof dados.listarUsuarios,'function');
+assert.equal((await dados.listarUsuarios())[0].ativo,false);
+const bloqueado=criarDados({functions:{invoke:async()=>({data:null,error:{context:new Response(JSON.stringify({erro:'Somente a conta gestora pode administrar usuários.'}),{status:403})}})}});
+await assert.rejects(bloqueado.listarUsuarios(),/Somente a conta gestora/);
+const convite=criarDados({functions:{invoke:async(_nome,{body})=>({data:{email:body.email,link:'https://exemplo.invalid/convite'},error:null})}});
+assert.equal((await convite.convidarUsuario({email:'teste@example.invalid',nome:'Teste',role:'Cliente'})).email,'teste@example.invalid');
+console.log('Usuários dados: listagem, erro de autorização e resposta de convite verificados.');
+const renovar=criarDados({functions:{invoke:async(_nome,{body})=>{assert.deepEqual(body,{acao:'link_acesso',id:'alvo'});return {data:{email:'teste@example.invalid',link:'https://exemplo.invalid/acesso'},error:null}}}});
+assert.equal((await renovar.gerarLinkAcesso({id:'alvo',role:'Christopher'})).link,'https://exemplo.invalid/acesso');

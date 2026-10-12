@@ -7,3 +7,6 @@ dist/
 .agents/
 skills-lock.json
 oficina-ok.txt
+.vercel/
+.DS_Store
+*.log

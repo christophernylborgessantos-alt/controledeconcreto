@@ -1,0 +1,2 @@
+[functions.usuarios]
+verify_jwt = true

@@ -1,14 +1,34 @@
 # PRD Frontend — controlenotasconcreto
 Escopo desta etapa: demonstração local React + Vite, dados fictícios persistidos no navegador. Referência: preview.html, opção Painel, paleta #0E7C86 #06282A #EEF3F4 #1EE6F0 #E8845B. Menu lateral em tela larga, barra inferior no celular, botões de pelo menos 44px.
 ## Notas
+No formulário, o campo Local lista os locais da obra e oferece cadastro direto: nome do novo local, Cadastrar e selecionar e Cancelar cadastro. Após cadastrar, seleciona o novo local sem perder o rascunho da nota. Sem locais, Nova nota abre com esse cadastro disponível. Cliente continua somente consulta. O local cadastrado permanece reutilizável mesmo que a nota ainda não tenha sido salva.
 Tela inicial com obra, datas inicial/final e local como filtros. Lista: data, número fiscal, fck em MPa, slump, local, volume m³, acumulado diário da obra. Total diário não muda com filtro de local; subtotal acompanha todos os filtros. Christopher e analista criam/editam; cliente só consulta. Nota duplicada na mesma obra é rejeitada. Volume e fck positivos. Estado vazio com ação de criar para perfis autorizados.
 ## Obras e locais
 10 obras com notas e locais separados. Volume teórico opcional por local, editável por Christopher e analista. Cliente consulta tudo. Valor teórico preenchido é positivo.
 ## Dashboards
 Volumes por dia e comparação aplicada x teórica por local da obra selecionada. Diferença em m³ e percentual somente quando teórico informado. Filtros de obra comuns às telas.
+## Relatórios
+
+Aba disponível aos três perfis, com obra selecionada e período inclusivo pela data de aplicação. Mostra notas, locais, fck, slump, volumes e total do período; todos os ensaios dessas notas aos 7/28/63 dias, datas previstas, esperado opcional, dois resultados, situação e observações. Zero permanece resultado, null aparece pendente/não informado. Abaixo do esperado tem texto e destaque, sem inferir aceitação estrutural. Período inválido mostra erro; sem notas mostra estado vazio e não imprime. Botão Imprimir / salvar como PDF abre janela do navegador. CSS de impressão A4 esconde navegação e controles, repete cabeçalhos das tabelas e evita dividir blocos curtos de ensaios.
+
+## Exclusão de notas
+
+Christopher e Analista veem Excluir nota ao lado de Editar. Confirmação identifica NF, obra, data e volume e avisa que a nota e seus ensaios serão removidos definitivamente. Cancelar preserva registros; confirmar aguarda o banco, bloqueia reenvio e atualiza listas/totais/relatórios. Cliente não tem controles de exclusão. Versão antiga gera conflito e exige recarregar.
+
+## Usuários
+
+Aba exclusiva da conta proprietária, definida pelo indicador protegido gestor_usuarios; classificar outra pessoa como Engenheiro não delega a gestão. Disponível mesmo sem obras. Lista nome, e-mail, categoria e situação, com busca e atualização. Convidar pessoa recebe nome/e-mail/categoria, exige confirmação e gera link individual para copiar e compartilhar manualmente; não envia e-mail. Link não é salvo na interface nem no localStorage. Com app local, destinatário precisa abrir neste computador; APP_URL da função deverá ser configurada para o domínio público antes da publicação.
+
+Alterar acesso permite categoria e ativação/desativação com confirmação. Desativar preserva a conta e bloqueia novas operações nos dados; não apaga registros. Reativar devolve acesso às obras. Própria conta permanece protegida e sem botões de alteração. Estado pendente de aceite do convite é apresentado separadamente de ativo/desativado. Erros preservam formulário; controles bloqueiam reenvio durante operação.
 ## Ensaios e prazos
 Cada nota possui dois resultados em MPa aos 7, 28 e 63 dias, esperado opcional por idade e observações. Resultado abaixo do esperado é destacado individualmente. Sem esperado não há conclusão. Datas previstas calculadas provisoriamente a partir da aplicação. Vencido: prazo anterior ao dia atual e algum dos dois resultados ausente. Vence hoje: prazo hoje e incompleto. Ambos preenchidos: Preenchido. Zero é valor, não ausência. Avisos internos por nota e idade. Filtros de obra, idade, situação e abaixo do esperado; cartões com contagem de vencidos, baixos e preenchidos. Cliente consulta; outros dois perfis lançam.
-## Limites
+## Atualização — login e banco, 11/10/2026
+
+Os nomes de acesso exibidos são Engenheiro, Analista e Cliente. O identificador interno Christopher é apresentado como Engenheiro; a alteração é de denominação e preserva as permissões.
+
+O escopo demonstrativo acima é histórico. A versão atual usa login real por convite e banco Supabase vazio inicialmente. Não há seletor manual de perfil nem persistência de negócio em localStorage. A tela de entrada tem e-mail/senha; convite e recuperação apresentam definição de senha. Carregamento, erros e sucesso após confirmação do banco são explícitos. Escritores cadastram/editam obras e locais. Banco vazio orienta cadastrar obra e local antes da nota. Formulário mantém rascunho em caso de falha e bloqueia controles enquanto salva. Conta inativa vê mensagem de liberação pendente. Logout limpa dados da sessão. Recarregar dados e formulários permite atualizar após conflito. Prazos confirmados pela aplicação.
+
+## Limites da Fundação (histórico)
 Login e permissões reais, banco, notificações externas, exclusão e histórico ficam para etapas futuras. Confirmar aplicação versus moldagem antes de uso real. Dados não se sincronizam entre dispositivos.
 ## Aceite
 Trocar obra troca listas e totais. Alterações reaparecem ao recarregar neste navegador. Cliente não dispõe de controles de escrita. Ausência de teórico e ensaios não bloqueia nota. npm run check fecha em zero.

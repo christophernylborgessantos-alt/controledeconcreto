@@ -1,0 +1,52 @@
+{
+  "profiles": [
+    "id",
+    "nome",
+    "role",
+    "ativo",
+    "created_at",
+    "gestor_usuarios"
+  ],
+  "obras": [
+    "id",
+    "nome",
+    "tipo",
+    "created_at",
+    "updated_at"
+  ],
+  "acessos_obras": [
+    "usuario_id",
+    "obra_id"
+  ],
+  "locais": [
+    "id",
+    "obra_id",
+    "nome",
+    "teorico",
+    "created_at",
+    "updated_at"
+  ],
+  "notas": [
+    "id",
+    "obra_id",
+    "local_id",
+    "numero",
+    "data",
+    "fck",
+    "slump",
+    "volume",
+    "observacoes",
+    "versao",
+    "created_at",
+    "updated_at"
+  ],
+  "ensaios": [
+    "id",
+    "obra_id",
+    "nota_id",
+    "idade",
+    "esperado",
+    "resultado_1",
+    "resultado_2"
+  ]
+}

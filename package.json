@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint src",
+    "lint": "eslint src supabase/functions/usuarios/handler.js",
     "preview": "vite preview",
     "check": "npm run build && npm run lint && node tests/run.mjs"
   },

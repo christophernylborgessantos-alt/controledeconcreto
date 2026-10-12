@@ -10,3 +10,11 @@ export function validarNota(n,notes){if(!n.obra_id||!n.data||!n.numero.trim()||!
 
 export function percentual(parte,todo){return todo>0?parte/todo*100:0}
 export function comparar(aplicado,teorico){return teorico===null?null:{diferenca:Number((aplicado-teorico).toFixed(6)),percentual:percentual(aplicado,teorico)-100}}
+
+export function montarRelatorio(data,{obra,de='',ate=''}){
+  if(de&&ate&&de>ate)throw Error('Confira o período: a data final deve ser igual ou posterior à inicial.');
+  const notas=data.notas.filter(n=>n.obra_id===obra&&(!de||n.data>=de)&&(!ate||n.data<=ate))
+    .sort((a,b)=>a.data.localeCompare(b.data)||a.numero.localeCompare(b.numero))
+    .map(n=>({...n,local:data.locais.find(l=>l.id===n.local_id&&l.obra_id===obra)?.nome||'Local não encontrado'}));
+  return {obra:data.obras.find(o=>o.id===obra),notas,volume:total(notas)};
+}

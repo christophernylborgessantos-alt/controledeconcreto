@@ -68,3 +68,15 @@ Nada formalizado nesta etapa.
 
 ## Fundação do módulo controlenotasconcreto
 React + Vite, telas Notas, Obras e locais, Dashboards e Ensaios e prazos. Dados de exemplo no navegador, sem banco ou login real. Regras do projeto em AGENTS.md e telas em PRD-FRONTEND.md. Data-base de ensaios permanece provisoriamente a aplicação, até confirmação de Christopher.
+
+## Etapa login e banco — 11/10/2026
+
+Aprovados: acesso por convite, sem cadastro público; prazos contados da aplicação; banco vazio com exemplos somente nos testes. Desenho em PRD-BACKEND.md. Projeto Supabase criado, migrations com RLS aplicadas e telas conectadas à camada assíncrona. Christopher e Analista cadastram obras/locais e lançam notas/ensaios; Cliente consulta. Sem exclusão nesta entrega.
+
+Convite real de Christopher enviado com autorização. Definição de senha e aceite completo pela interface ainda em investigação após relato de erro ao abrir. Nenhuma publicação ou envio ao GitHub nesta etapa.
+
+## Atualizações de uso — 11/10/2026
+
+Gestão de usuários solicitada e aprovada: exclusiva do login proprietário, com classificação Engenheiro/Analista/Cliente, desativação/reativação e proteção da própria conta. Convites por link para compartilhar foram escolhidos em vez de configurar SMTP. Backend administrativo implantado, sem publicar o site; links locais funcionam somente neste computador até configurar o domínio público.
+
+Usuário confirmou login e banco vazio. Solicitou e aprovou cadastrar local na própria nota, relatório de notas/volumes/ensaios por obra e período para impressão/PDF, e exclusão de notas por Christopher e Analista. Exclusão definitiva exige confirmação, validação no banco e remoção conjunta dos ensaios. Cliente permanece somente consulta. Testes no navegador usaram exemplos isolados; impressão e aceite dos cadastros reais no navegador do usuário continuam a confirmar. Sem push/deploy.

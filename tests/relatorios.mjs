@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';
+import * as regras from '../src/lib/regras.js';
+assert.equal(typeof regras.montarRelatorio,'function');
+const ensaios=Object.fromEntries([7,28,63].map(i=>[i,{esperado:null,resultados:[0,null]}]));
+const data={obras:[{id:'a',nome:'Obra A'},{id:'b',nome:'Obra B'}],locais:[{id:'l',obra_id:'a',nome:'Laje'}],notas:[
+ {id:'1',obra_id:'a',local_id:'l',data:'2026-10-11',numero:'1',volume:.1,ensaios},
+ {id:'2',obra_id:'a',local_id:'l',data:'2026-10-11',numero:'2',volume:.2,ensaios},
+ {id:'3',obra_id:'b',data:'2026-10-11',volume:50,ensaios},
+ {id:'4',obra_id:'a',data:'2026-10-10',volume:20,ensaios}
+]};
+const r=regras.montarRelatorio(data,{obra:'a',de:'2026-10-11',ate:'2026-10-11'});
+assert.equal(r.volume,.3);
+assert.equal(r.notas.length,2);
+assert.equal(r.notas[0].local,'Laje');
+assert.deepEqual(r.notas[0].ensaios[7].resultados,[0,null]);
+assert.equal(r.notas[0].ensaios[7].esperado,null);
+assert.equal(regras.montarRelatorio(data,{obra:'a',de:'2026-10-12'}).notas.length,0);
+assert.throws(()=>regras.montarRelatorio(data,{obra:'a',de:'2026-10-12',ate:'2026-10-11'}),/período/);
+console.log('Relatórios: obra, período inclusivo, total decimal, zero e ausência verificados.');

@@ -1,0 +1,19 @@
+🔒 PORTA FECHADA | profiles | LER
+🔒 PORTA FECHADA | profiles | INSERIR
+🔒 PORTA FECHADA | profiles | APAGAR
+🔒 PORTA FECHADA | obras | LER
+🔒 PORTA FECHADA | obras | INSERIR
+🔒 PORTA FECHADA | obras | APAGAR
+🔒 PORTA FECHADA | acessos_obras | LER
+🔒 PORTA FECHADA | acessos_obras | INSERIR
+🔒 PORTA FECHADA | acessos_obras | APAGAR
+🔒 PORTA FECHADA | locais | LER
+🔒 PORTA FECHADA | locais | INSERIR
+🔒 PORTA FECHADA | locais | APAGAR
+🔒 PORTA FECHADA | notas | LER
+🔒 PORTA FECHADA | notas | INSERIR
+🔒 PORTA FECHADA | notas | APAGAR
+🔒 PORTA FECHADA | ensaios | LER
+🔒 PORTA FECHADA | ensaios | INSERIR
+🔒 PORTA FECHADA | ensaios | APAGAR
+🔒 PORTA FECHADA | Auth | cadastro público
