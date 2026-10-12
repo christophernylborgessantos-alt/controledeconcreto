@@ -47,5 +47,8 @@ export function montarRelatorio(data,{obra,de='',ate='',local='',numero='',fck='
   const notas=filtrarNotas(data.notas,{obra,de,ate,local,numero,fck})
     .sort((a,b)=>a.data.localeCompare(b.data)||a.numero.localeCompare(b.numero))
     .map(n=>({...n,local:data.locais.find(l=>l.id===n.local_id&&l.obra_id===obra)?.nome||'Local não encontrado'}));
-  return {obra:data.obras.find(o=>o.id===obra),notas,volume:total(notas)};
+  const locaisSelecionados=[...new Set(notas.map(n=>n.local_id))].map(id=>data.locais.find(l=>l.id===id&&l.obra_id===obra));
+  const teorico=locaisSelecionados.length&&locaisSelecionados.every(l=>l&&Number.isFinite(l.teorico))
+    ?Number(locaisSelecionados.reduce((s,l)=>s+l.teorico,0).toFixed(6)):null;
+  return {obra:data.obras.find(o=>o.id===obra),notas,volume:total(notas),teorico};
 }
