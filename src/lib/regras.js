@@ -19,9 +19,9 @@ export function resumoLocal(notas,local){
   return {aplicado,...comparar(aplicado,local.teorico)};
 }
 
-export function montarRelatorio(data,{obra,de='',ate=''}){
+export function montarRelatorio(data,{obra,de='',ate='',local='',numero='',fck=''}){
   if(de&&ate&&de>ate)throw Error('Confira o período: a data final deve ser igual ou posterior à inicial.');
-  const notas=data.notas.filter(n=>n.obra_id===obra&&(!de||n.data>=de)&&(!ate||n.data<=ate))
+  const notas=filtrarNotas(data.notas,{obra,de,ate,local,numero,fck})
     .sort((a,b)=>a.data.localeCompare(b.data)||a.numero.localeCompare(b.numero))
     .map(n=>({...n,local:data.locais.find(l=>l.id===n.local_id&&l.obra_id===obra)?.nome||'Local não encontrado'}));
   return {obra:data.obras.find(o=>o.id===obra),notas,volume:total(notas)};
