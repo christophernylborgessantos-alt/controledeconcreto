@@ -34,3 +34,5 @@ Login e permissões reais, banco, notificações externas, exclusão e históric
 Trocar obra troca listas e totais. Alterações reaparecem ao recarregar neste navegador. Cliente não dispõe de controles de escrita. Ausência de teórico e ensaios não bloqueia nota. npm run check fecha em zero.
 
 - 12/10/2026: Cadastro de local pela nota inclui volume teórico opcional em m³, salvo no local e reutilizado nos demais lançamentos. Local existente sem teórico permite preenchê-lo na nota pelo botão Salvar volume teórico do local. Valor já salvo aparece para consulta; correções pela aba Obras. Comparativo na nota e Dashboard usa a soma de todas as notas salvas da mesma obra/local, de todas as datas. Nota em edição entra após salvar. Renomear local não altera teórico; cancelar limpa o rascunho.
+
+- 12/10/2026: Dashboard com filtros Desde/Até, Local e FCK; obra pelo seletor global; Limpar filtros restaura todos. Trocar obra reinicia filtros. Gráfico diário, volume e número de notas seguem a seleção. Teórico continua total do local; comparação parcial rotulada e acumulado completo permanece como referência. Período invertido exibe alerta.
