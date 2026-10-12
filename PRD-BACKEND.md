@@ -80,3 +80,5 @@ MCP list_projects respondeu sem projetos. list_organizations encontrou christoph
 Antes de criar projeto, confirmar organização escolhida e consultar/apresentar custo pelo MCP. Proposta de nome: controlenotasconcreto; região sa-east-1. Nenhum projeto, conta, convite ou credencial foi criado neste diagnóstico.
 
 Revisar este desenho, especialmente cadastro de obras/locais e provisionamento administrativo dos convites, antes de preparar a execução.
+
+- 12/10/2026: Ensaios com botão Peça não estrutural (aria-pressed), confirmado pelo botão Salvar ensaio. Flag notas.nao_estrutural defaultfalse, persistida na RPC salvar_ensaios junto à versão/observações/resultados, enviada como chave nao_estrutural no JSON p_ensaios; omissão por versão antiga preserva valor. Desabilita esperado/resultados7/28/63; dispensa vencidos, pendências, preenchidos e abaixo do esperado. Volumes mantidos. Relatórios identificam peça dispensada sem tabela pendente; dados históricos não são apagados. Desmarcar reativa regras e resultados. Migration20261012_nao_estrutural.sql; testes Node/renderização e SQLrollback testes/nao-estrutural.sql passaram, revisão Standards/Spec sem bloqueios.

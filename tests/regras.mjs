@@ -15,3 +15,6 @@ const localTeorico={id:'l1',obra_id:'1',teorico:20};
 const acumulado=resumoLocal([...notasFiltro,{...notasFiltro[0],id:'d',data:'2026-10-12',volume:15}],localTeorico);
 assert.equal(acumulado.aplicado,23);assert.equal(acumulado.diferenca,3);assert.ok(Math.abs(acumulado.percentual-15)<0.000001);
 assert.deepEqual(resumoLocal(notasFiltro,{...localTeorico,teorico:null}),{aplicado:8});
+for(const idade of [7,28,63])assert.equal(situacao({resultados:[null,null]},'2020-01-01',idade,'2026-10-12',true),'Não necessário');
+assert.equal(baixo({esperado:30,resultados:[1,2]},true),false);
+assert.equal(situacao({resultados:[null,null]},'2020-01-01',7,'2026-10-12',false),'Vencido');

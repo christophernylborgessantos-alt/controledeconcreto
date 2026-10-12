@@ -53,3 +53,7 @@ O advisor também indicou proteção contra senhas vazadas desativada. Isso sign
 Convite real enviado para o endereço aprovado. Erro inicial de conexão ao servidor local resolvido após reinício; HTTP 200 confirmado. Novo link de recuperação enviado ao mesmo endereço para concluir a senha após o convite consumido. Usuário confirmou que definiu a senha e entrou, vendo o banco vazio. Restauração de sessão, saída e cadastro pela interface ainda precisam de verificação final. Sem publicação ou envio ao GitHub nesta etapa.
 
 Tabela nova no futuro = rodar esta auditoria novamente. Snapshot e verificações estáticas de migrations não substituem testes reais de RLS/GRANT e devem ser atualizados após qualquer migration.
+
+## Verificação após classificação não estrutural — 12/10/2026
+
+Nova coluna em notas, sem privilégios de UPDATE direto. RPC exige escritor ativo, acesso à obra e versão atual. SQL em rollback confirmou gravação/reversão, preservação de resultados, conflito, cliente bloqueado e compatibilidade com omissão do campo. Teste anônimo fechou18operações e cadastro público. Advisors mantêm os mesmos5avisos de funções SECURITY DEFINER intencionais/autorizadas e proteção de senhas vazadas desativada; nenhum alerta novo nesta alteração.

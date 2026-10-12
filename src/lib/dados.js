@@ -74,7 +74,7 @@ export function criarDados(cliente) {
       const [obras,locais,notas]=await Promise.all([
         todos(c.from('obras').select('id,nome,tipo')),
         todos(c.from('locais').select('id,obra_id,nome,teorico')),
-        todos(c.from('notas').select('id,obra_id,local_id,numero,data,fck,slump,volume,observacoes,versao,ensaios(idade,esperado,resultado_1,resultado_2)'))
+        todos(c.from('notas').select('id,obra_id,local_id,numero,data,fck,slump,volume,observacoes,versao,nao_estrutural,ensaios(idade,esperado,resultado_1,resultado_2)'))
       ]);
       return {obras:obras.sort((a,b)=>a.nome.localeCompare(b.nome)),locais:locais.map(l=>({...l,teorico:l.teorico===null?null:Number(l.teorico)})),notas:notas.map(n=>{
         const porIdade=Object.fromEntries(n.ensaios.map(e=>[e.idade,{esperado:e.esperado===null?null:Number(e.esperado),resultados:[e.resultado_1,e.resultado_2].map(v=>v===null?null:Number(v))}]));
@@ -88,7 +88,7 @@ export function criarDados(cliente) {
     },
     async salvarEnsaios(nota) {
       validarResistencias(nota.ensaios);
-      return conferir(conectar().rpc('salvar_ensaios',{p_id:nota.id,p_versao:nota.versao,p_ensaios:nota.ensaios,p_observacoes:nota.observacoes}));
+      return conferir(conectar().rpc('salvar_ensaios',{p_id:nota.id,p_versao:nota.versao,p_ensaios:{...nota.ensaios,nao_estrutural:nota.nao_estrutural===true},p_observacoes:nota.observacoes}));
     },
     async excluirNota(nota){
       return conferir(conectar().rpc('excluir_nota',{p_id:nota.id,p_versao:nota.versao}));

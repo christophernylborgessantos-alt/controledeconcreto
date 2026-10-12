@@ -38,7 +38,8 @@
     "observacoes",
     "versao",
     "created_at",
-    "updated_at"
+    "updated_at",
+    "nao_estrutural"
   ],
   "ensaios": [
     "id",

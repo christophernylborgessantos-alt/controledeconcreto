@@ -55,3 +55,7 @@ let camposRenomeados;
 const renomear=modulo.criarDados({from:()=>({update:campos=>{camposRenomeados=campos;return {eq:()=>({select:()=>({single:async()=>({data:{id:'local'},error:null})})})}}})});
 await renomear.salvarLocal({id:'local',nome:'Novo nome',obra_id:'obra',teorico:100});
 assert.equal(Object.hasOwn(camposRenomeados,'teorico'),false,'Renomear não altera o teórico do local');
+let enviado;
+const classificacao=modulo.criarDados({rpc:async(_nome,args)=>{enviado=args;return {data:'n',error:null}}});
+await classificacao.salvarEnsaios({id:'n',versao:1,nao_estrutural:true,observacoes:'',ensaios:Object.fromEntries([7,28,63].map(i=>[i,{esperado:null,resultados:[null,null]}]))});
+assert.equal(enviado.p_ensaios.nao_estrutural,true);
