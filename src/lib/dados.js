@@ -3,7 +3,7 @@ export {definirSenhaNoAcesso} from './supabase.js';
 import {idades,validarNota} from './regras.js';
 
 function erroBanco(error) {
-  if (error.code==='40001') return 'Esta nota foi alterada por outra pessoa. Recarregue antes de continuar.';
+  if (error.code==='40001') return 'Este registro foi alterado por outra pessoa. Recarregue antes de continuar.';
   if (error.code==='23505') return 'Já existe um registro com esses dados nesta obra.';
   if (error.code==='42501') return 'Seu perfil não possui autorização para esta operação.';
   if (['23514','23503','22P02','22003'].includes(error.code)) return 'Confira os valores e o local da obra. Use números finitos, menores que 1 bilhão, com até seis casas decimais.';
@@ -93,6 +93,9 @@ export function criarDados(cliente) {
     async excluirNota(nota){
       return conferir(conectar().rpc('excluir_nota',{p_id:nota.id,p_versao:nota.versao}));
     },
+    async excluirObra(obra){
+      return conferir(conectar().rpc('excluir_obra',{p_id:obra.id,p_nome:obra.nome}));
+    },
     async salvarTeorico(id,value) {
       if(value!==null&&(!Number.isFinite(value)||value<=0)) throw Error('O volume teórico deve ser maior que zero, ou ficar vazio.');
       return conferir(conectar().from('locais').update({teorico:value,updated_at:new Date().toISOString()}).eq('id',id).select('id').single());
@@ -114,4 +117,4 @@ export function criarDados(cliente) {
     }
   };
 }
-export const {entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);
+export const {entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);

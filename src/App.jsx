@@ -59,7 +59,7 @@ export default function App(){
     setFeedback(mensagem);
     try{
       const d=await carregar();
-      if(atual===epoch.current)setData(d);
+      if(atual===epoch.current){setData(d);setObra(o=>d.obras.some(x=>x.id===o)?o:d.obras[0]?.id??'')}
     }catch{if(atual===epoch.current)setFeedback(mensagem+' A atualização da tela falhou. Recarregue os dados.')}
     return resultado;
   }

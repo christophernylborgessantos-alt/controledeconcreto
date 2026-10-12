@@ -57,3 +57,7 @@ Tabela nova no futuro = rodar esta auditoria novamente. Snapshot e verificaçõe
 ## Verificação após classificação não estrutural — 12/10/2026
 
 Nova coluna em notas, sem privilégios de UPDATE direto. RPC exige escritor ativo, acesso à obra e versão atual. SQL em rollback confirmou gravação/reversão, preservação de resultados, conflito, cliente bloqueado e compatibilidade com omissão do campo. Teste anônimo fechou18operações e cadastro público. Advisors mantêm os mesmos5avisos de funções SECURITY DEFINER intencionais/autorizadas e proteção de senhas vazadas desativada; nenhum alerta novo nesta alteração.
+
+## Exclusão de obra — 12/10/2026
+
+RPCExcluirObra autenticada e limitada a escritor ativo vinculado à obra. Exclusão integral/atômica somente dessaobra; semGRANTDELETEdireto. TesteSQLrollback confirma Cliente/Pendente/anônimo/semvínculo bloqueados e nome desatualizado recusado; falhainduzida preserva todos osdados. Testeanônimo:18operações continuamfechadas e cadastrópúblicodesligado. Advisors agora apontam6RPCsSECURITYDEFINER intencionais (novaexcluir_obra), todascomchecagens, e oavisopréexistente sobreproteçãodesenhasvazadasdesativada.

@@ -59,3 +59,7 @@ let enviado;
 const classificacao=modulo.criarDados({rpc:async(_nome,args)=>{enviado=args;return {data:'n',error:null}}});
 await classificacao.salvarEnsaios({id:'n',versao:1,nao_estrutural:true,observacoes:'',ensaios:Object.fromEntries([7,28,63].map(i=>[i,{esperado:null,resultados:[null,null]}]))});
 assert.equal(enviado.p_ensaios.nao_estrutural,true);
+assert.equal(typeof dados.excluirObra,'function');
+await assert.rejects(dados.excluirObra({id:'o',nome:'Obra'}),/Recarregue/);
+await classificacao.excluirObra({id:'o',nome:'Obra'});
+assert.deepEqual(enviado,{p_id:'o',p_nome:'Obra'});
