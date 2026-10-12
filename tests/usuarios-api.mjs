@@ -61,3 +61,13 @@ assert.equal(renovado.headers.get('Access-Control-Allow-Origin'),'http://127.0.0
 assert.equal((await acesso(new Request('https://teste.invalid',{method:'OPTIONS',headers:{Origin:'https://intruso.invalid'}}))).status,403);
 assert.equal((await acesso(request({acao:'link_acesso',id:'gestor'}))).status,403);
 console.log('Links de acesso: endereço público fixo, recuperação e origem permitida verificados.');
+sucesso.from=()=>({select:()=>({eq:(_campo,id)=>({single:async()=>({data:id==='gestor'?{ativo:true,gestor_usuarios:true}:{ativo:false},error:null})})})});
+linkArgs=undefined;
+assert.equal((await acesso(request({acao:'link_acesso',id:alvo}))).status,400);
+assert.equal(linkArgs,undefined,'Alvo desativado não recebe link');
+sucesso.from=()=>({select:()=>({eq:()=>({single:async()=>({data:{ativo:true,gestor_usuarios:true},error:null})})})});
+sucesso.auth.admin.listUsers=async()=>({data:{users:[{id:alvo,email:'teste@example.invalid',email_confirmed_at:null}]},error:null});
+const antes=rpcCalls.length;
+assert.equal((await acesso(request({acao:'link_acesso',id:alvo}))).status,200);
+assert.equal(linkArgs.type,'invite');
+assert.equal(rpcCalls.length,antes,'Gerar link não altera perfil');

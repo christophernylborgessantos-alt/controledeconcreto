@@ -67,3 +67,9 @@ O registro abaixo documenta a etapa anterior; o estado atual é o resumo acima.
 - Supabase Site URL e redirect autorizado apontam ao domínio público exato. Edge usuarios versão 2 usa esse endereço fixo para convites e recuperação, CORS público e dev 5175. Segredos apenas no servidor.
 - Usuário autorizou remover a exigência de login Vercel para abrir a página; autenticação Supabase/RLS permanecem obrigatórias. Proteção Vercel removida com MCP após aprovação explícita.
 - Botão Gerar link de acesso, somente gestor, para substituir links antigos. Não altera papel/status; alvo deve estar ativo. Recovery para conta confirmada, invite para pendente.
+
+### Publicação confirmada — 12/10/2026
+- https://controledenotasconcreto.vercel.app/ publicado via GitHub main 58518cb; Vercel READY, HTTP 200 anônimo e tela de login conferidos. Vercel conecta somente o repositório controledeconcreto. Novos pushes em main iniciam publicação automática.
+- Build/lint/testes passaram. Teste do estranho bloqueou 18 operações nas 6 tabelas, cadastro público e gestão anônima. Revisões Standards/Spec sem bloqueios; texto de recuperação local corrigido.
+- Para usuário já convidado com link local inválido: proprietário abre o app público, Usuários, Gerar link de acesso no destinatário e compartilha privadamente. O agente não solicita senha, token ou link. Confirmação real pelo convidado ainda pendente.
+- Configurações e dados secretos nunca vão ao GitHub. .env.local/node_modules/dist/.vercel ignorados. Capturas de links reais não devem ser salvas.
