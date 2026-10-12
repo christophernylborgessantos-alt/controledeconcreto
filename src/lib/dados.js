@@ -1,6 +1,6 @@
 import {supabase} from './supabase.js';
 export {definirSenhaNoAcesso} from './supabase.js';
-import {idades,validarNota} from './regras.js';
+import {idades,validarNota,esperadoFck} from './regras.js';
 
 function erroBanco(error) {
   if (error.code==='40001') return 'Este registro foi alterado por outra pessoa. Recarregue antes de continuar.';
@@ -14,10 +14,10 @@ async function conferir(promise) {
   if (error) throw Error(erroBanco(error));
   return data;
 }
-async function todos(query){
+async function todos(query,ordem='id'){
   const linhas=[];
   for(let inicio=0;;inicio+=500){
-    const pagina=await conferir(query.order('id').range(inicio,inicio+499));
+    const pagina=await conferir(query.order(ordem).range(inicio,inicio+499));
     linhas.push(...pagina);
     if(pagina.length<500)return linhas;
   }
@@ -45,6 +45,21 @@ export function criarDados(cliente) {
     return data;
   }
   return {
+    async listarMapas(obra){return (await todos(conectar().from('mapas').select('id,obra_id,local_id,peca,desde,ate,versao').eq('obra_id',obra))).sort((a,b)=>b.desde.localeCompare(a.desde))},
+    async obterMapa(id){
+      const mapa=await conferir(conectar().from('mapas').select('id,obra_id,local_id,peca,desde,ate,imagem,versao').eq('id',id).single());
+      const itens=await todos(conectar().from('mapa_itens').select('nota_id,betoneira,inicio,termino').eq('mapa_id',id),'nota_id');
+      const atual=await conferir(conectar().from('mapas').select('versao').eq('id',id).single());
+      if(atual.versao!==mapa.versao)throw Error('Este mapa foi alterado durante o carregamento. Recarregue antes de continuar.');
+      return {...mapa,itens};
+    },
+    async salvarMapa(mapa){
+      if(!mapa.peca.trim()||!mapa.local_id||!mapa.desde||!mapa.ate||mapa.ate<mapa.desde)throw Error('Informe peça, local e período válido.');
+      if(mapa.imagem&&!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(mapa.imagem))throw Error('Use uma imagem JPG, PNG ou WebP.');
+      if(mapa.imagem?.length>2800000)throw Error('A imagem deve ter até 2 MB.');
+      return conferir(conectar().rpc('salvar_mapa',{p_mapa:mapa,p_versao:mapa.versao??null}));
+    },
+    async excluirMapa(mapa){return conferir(conectar().rpc('excluir_mapa',{p_id:mapa.id,p_versao:mapa.versao}))},
     async listarUsuarios(){return (await gestao({acao:'listar'})).usuarios},
     async gerarLinkAcesso(usuario){return gestao({acao:'link_acesso',id:usuario.id})},
     async convidarUsuario(usuario){return gestao({acao:'convidar',nome:usuario.nome,email:usuario.email,role:usuario.role})},
@@ -77,7 +92,7 @@ export function criarDados(cliente) {
         todos(c.from('notas').select('id,obra_id,local_id,numero,data,fck,slump,volume,observacoes,versao,nao_estrutural,ensaios(idade,esperado,resultado_1,resultado_2)'))
       ]);
       return {obras:obras.sort((a,b)=>a.nome.localeCompare(b.nome)),locais:locais.map(l=>({...l,teorico:l.teorico===null?null:Number(l.teorico)})),notas:notas.map(n=>{
-        const porIdade=Object.fromEntries(n.ensaios.map(e=>[e.idade,{esperado:Number(n.fck),resultados:[e.resultado_1,e.resultado_2].map(v=>v===null?null:Number(v))}]));
+        const porIdade=Object.fromEntries(n.ensaios.map(e=>[e.idade,{esperado:esperadoFck(n.fck,e.idade),resultados:[e.resultado_1,e.resultado_2].map(v=>v===null?null:Number(v))}]));
         if (idades.some(i=>!porIdade[i])) throw Error('Esta nota está sem uma idade de ensaio. Solicite a conferência do cadastro.');
         return {...n,volume:Number(n.volume),fck:Number(n.fck),ensaios:porIdade};
       })};
@@ -87,7 +102,7 @@ export function criarDados(cliente) {
       return conferir(conectar().rpc('salvar_nota',{p_nota:{id:nota.id,obra_id:nota.obra_id,local_id:nota.local_id,numero:nota.numero.trim(),data:nota.data,fck:nota.fck,slump:nota.slump,volume:nota.volume},p_versao:nota.versao??null}));
     },
     async salvarEnsaios(nota) {
-      const ensaios=Object.fromEntries(idades.map(idade=>[idade,{...nota.ensaios[idade],esperado:nota.fck}]));
+      const ensaios=Object.fromEntries(idades.map(idade=>[idade,{...nota.ensaios[idade],esperado:esperadoFck(nota.fck,idade)}]));
       validarResistencias(ensaios);
       return conferir(conectar().rpc('salvar_ensaios',{p_id:nota.id,p_versao:nota.versao,p_ensaios:{...ensaios,nao_estrutural:nota.nao_estrutural===true},p_observacoes:nota.observacoes}));
     },
@@ -118,4 +133,4 @@ export function criarDados(cliente) {
     }
   };
 }
-export const {entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);
+export const {listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);

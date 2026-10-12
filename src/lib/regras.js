@@ -1,4 +1,5 @@
 export const idades=[7,28,63];
+export function esperadoFck(fck,idade){return idade===7?Number((Number(fck)*0.7).toFixed(6)):Number(fck)}
 export function hoje(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Sao_Paulo'}).format(new Date())}
 export function prazo(date,days){const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10)}
 export function dataBR(d){return d.split('-').reverse().join('/')}
@@ -51,4 +52,19 @@ export function montarRelatorio(data,{obra,de='',ate='',local='',numero='',fck='
   const teorico=locaisSelecionados.length&&locaisSelecionados.every(l=>l&&Number.isFinite(l.teorico))
     ?Number(locaisSelecionados.reduce((s,l)=>s+l.teorico,0).toFixed(6)):null;
   return {obra:data.obras.find(o=>o.id===obra),notas,volume:total(notas),teorico};
+}
+
+export function duracaoConcretagem(inicio,termino){
+ if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(inicio)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(termino))return null;
+ const minutos=s=>Number(s.slice(0,2))*60+Number(s.slice(3));
+ const duracao=(minutos(termino)-minutos(inicio)+1440)%1440;
+ return String(Math.floor(duracao/60)).padStart(2,'0')+':'+String(duracao%60).padStart(2,'0');
+}
+export function linhasMapa(data,mapa){
+ let acumulado=0;
+ return filtrarNotas(data.notas,{obra:mapa.obra_id,local:mapa.local_id,de:mapa.desde,ate:mapa.ate}).sort((a,b)=>a.data.localeCompare(b.data)||a.numero.localeCompare(b.numero, 'pt-BR',{numeric:true})||a.id.localeCompare(b.id)).map((n,i)=>{
+  acumulado=Number((acumulado+n.volume).toFixed(6));
+  const extra=mapa.itens?.find(item=>item.nota_id===n.id)||{};
+  return {...n,item:i+1,acumulado,betoneira:extra.betoneira||'',inicio:extra.inicio||'',termino:extra.termino||'',duracao:duracaoConcretagem(extra.inicio,extra.termino)};
+ });
 }

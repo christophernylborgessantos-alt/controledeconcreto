@@ -61,3 +61,13 @@ Nova coluna em notas, sem privilégios de UPDATE direto. RPC exige escritor ativ
 ## Exclusão de obra — 12/10/2026
 
 RPCExcluirObra autenticada e limitada a escritor ativo vinculado à obra. Exclusão integral/atômica somente dessaobra; semGRANTDELETEdireto. TesteSQLrollback confirma Cliente/Pendente/anônimo/semvínculo bloqueados e nome desatualizado recusado; falhainduzida preserva todos osdados. Testeanônimo:18operações continuamfechadas e cadastrópúblicodesligado. Advisors agora apontam6RPCsSECURITYDEFINER intencionais (novaexcluir_obra), todascomchecagens, e oavisopréexistente sobreproteçãodesenhasvazadasdesativada.
+
+## Auditoria adicional — Mapeamento, 12/10/2026
+
+- Tabelas novas: mapas e mapa_itens; RLS ativa, SELECT apenas authenticated com vínculo ativo à obra, escrita/exclusão apenas pelas RPCs que exigem editor ativo e versão.
+- Teste do estranho repetido: 24 tentativas nas oito tabelas, todas PORTA FECHADA. Cadastro público bloqueado.
+- Testes SQL em rollback: Cliente lê e não salva/exclui; pendente não lê/exclui; local de outra obra, período inválido, SVG, notas fora do período e versão antiga bloqueados; falhas atômicas; excluir mapa preserva notas; excluir obra remove mapas/itens, preservando outra obra. Não foram criadas contas permanentes de teste.
+- Advisors: oito funções SECURITY DEFINER intencionalmente acessíveis aos autenticados, com verificações internas (incluindo salvar_mapa/excluir_mapa). Aviso não indica policy liberada; nenhum RLS ausente. [Detalhes do aviso](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable).
+- Permanece o aviso anterior de proteção contra senhas vazadas desativada no Auth. [Configuração](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+- Imagens limitadas a 2 MB, carregadas só ao abrir o mapa e removidas junto ao registro; sem links públicos.
+- Tabela nova no futuro: repetir a auditoria.

@@ -11,13 +11,15 @@ const registros={
   acessos_obras:{usuario_id:usuario,obra_id:obra},
   locais:{id,obra_id:obra,nome:'AUDITORIA',teorico:null},
   notas:{id,obra_id:obra,local_id:randomUUID(),numero:'AUDITORIA-'+id,data:'2026-10-11',fck:30,volume:1},
-  ensaios:{id,obra_id:obra,nota_id:randomUUID(),idade:7}
+  ensaios:{id,obra_id:obra,nota_id:randomUUID(),idade:7},
+  mapas:{id,obra_id:obra,local_id:randomUUID(),peca:'AUDITORIA',desde:'2026-10-12',ate:'2026-10-12'},
+  mapa_itens:{mapa_id:id,obra_id:obra,nota_id:randomUUID(),betoneira:'AUDITORIA'}
 };
 let falhas=0;
 for(const [tabela,registro] of Object.entries(registros)){
   for(const [operacao,method] of [['LER','GET'],['INSERIR','POST'],['APAGAR','DELETE']]){
     // Exclusão sempre limitada a UUID aleatório deste teste; nunca apaga negócios.
-    const filtro=tabela==='acessos_obras'?`usuario_id=eq.${usuario}&obra_id=eq.${obra}`:`id=eq.${registro.id}`;
+    const filtro=tabela==='mapa_itens'?`mapa_id=eq.${id}&nota_id=eq.${registro.nota_id}`:tabela==='acessos_obras'?`usuario_id=eq.${usuario}&obra_id=eq.${obra}`:`id=eq.${registro.id}`;
     const endpoint=`${url}/rest/v1/${tabela}${method==='GET'?'?select=*&limit=1':method==='DELETE'?'?'+filtro:''}`;
     try{
       const res=await fetch(endpoint,{method,headers:{apikey:key,'Content-Type':'application/json',Prefer:'return=representation'},body:method==='POST'?JSON.stringify(registro):undefined,signal:AbortSignal.timeout(15000)});

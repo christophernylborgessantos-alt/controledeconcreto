@@ -6,3 +6,4 @@ import './check-schema.mjs';
 import './check-grants.mjs';
 import './usuarios-api.mjs';
 import './usuarios-dados.mjs';
+import './mapeamento.mjs';

@@ -49,5 +49,24 @@
     "esperado",
     "resultado_1",
     "resultado_2"
+  ],
+  "mapas": [
+    "id",
+    "obra_id",
+    "local_id",
+    "peca",
+    "desde",
+    "ate",
+    "imagem",
+    "versao",
+    "updated_at"
+  ],
+  "mapa_itens": [
+    "mapa_id",
+    "obra_id",
+    "nota_id",
+    "betoneira",
+    "inicio",
+    "termino"
   ]
 }

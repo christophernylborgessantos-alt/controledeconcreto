@@ -45,3 +45,12 @@ assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:3
 
 assert.equal(opcional63({...aprovada,fck:50}),false,'Esperado manual antigo não substitui o FCK');
 assert.equal(opcional63({...aprovada,fck:undefined}),false);
+
+const {esperadoFck}=await import('../src/lib/regras.js');
+assert.equal(esperadoFck(30,7),21);
+assert.equal(esperadoFck(35,7),24.5);
+assert.equal(esperadoFck(30,28),30);
+assert.equal(esperadoFck(30,63),30);
+for(const [resultado,abaixo] of [[20.99,true],[21,false],[21.01,false],[0,true]])assert.equal(baixo({esperado:esperadoFck(30,7),resultados:[resultado,null]}),abaixo);
+
+assert.equal(esperadoFck(30.123456,7),21.086419);
