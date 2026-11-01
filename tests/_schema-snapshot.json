@@ -1,22 +1,16 @@
 {
-  "profiles": [
-    "id",
-    "nome",
-    "role",
-    "ativo",
-    "created_at",
-    "gestor_usuarios"
-  ],
-  "obras": [
-    "id",
-    "nome",
-    "tipo",
-    "created_at",
-    "updated_at"
-  ],
   "acessos_obras": [
     "usuario_id",
     "obra_id"
+  ],
+  "ensaios": [
+    "id",
+    "obra_id",
+    "nota_id",
+    "idade",
+    "esperado",
+    "resultado_1",
+    "resultado_2"
   ],
   "locais": [
     "id",
@@ -24,6 +18,25 @@
     "nome",
     "teorico",
     "created_at",
+    "updated_at"
+  ],
+  "mapa_itens": [
+    "mapa_id",
+    "obra_id",
+    "nota_id",
+    "betoneira",
+    "inicio",
+    "termino"
+  ],
+  "mapas": [
+    "id",
+    "obra_id",
+    "local_id",
+    "peca",
+    "desde",
+    "ate",
+    "imagem",
+    "versao",
     "updated_at"
   ],
   "notas": [
@@ -42,32 +55,19 @@
     "nao_estrutural",
     "peca_estrutural"
   ],
-  "ensaios": [
+  "obras": [
     "id",
-    "obra_id",
-    "nota_id",
-    "idade",
-    "esperado",
-    "resultado_1",
-    "resultado_2"
-  ],
-  "mapas": [
-    "id",
-    "obra_id",
-    "local_id",
-    "peca",
-    "desde",
-    "ate",
-    "imagem",
-    "versao",
+    "nome",
+    "tipo",
+    "created_at",
     "updated_at"
   ],
-  "mapa_itens": [
-    "mapa_id",
-    "obra_id",
-    "nota_id",
-    "betoneira",
-    "inicio",
-    "termino"
+  "profiles": [
+    "id",
+    "nome",
+    "role",
+    "ativo",
+    "created_at",
+    "gestor_usuarios"
   ]
 }

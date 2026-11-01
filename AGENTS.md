@@ -134,3 +134,13 @@ O registro abaixo documenta a etapa anterior; o estado atual é o resumo acima.
 ### Publicação confirmada — 12/10/2026
 
 Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl_DiQZudbiPiEuHvkcGqMtiZn1naNP READY, alias https://controledenotasconcreto.vercel.app/ vinculado sem erro. HTTP200 e marcadores públicos de importação, mapa em branco, filtros de peça e desvio invertido conferidos. Revisão de código contra4019ed9 sem bloqueios. Esta confirmação supera as anotações anteriores de interface local/sem publicação para cadastro de peça, importação, filtros e mapa em branco.
+
+## Alteração local — usuários e obras, 01/11/2026
+- Usuário autorizou excluir contas preservando todos os lançamentos e selecionar obras por pessoa. UI AcoesUsuario com confirmação pelo nome, gestor protegido e lista de obras paginada via função usuarios. Sem seleção = sem acesso. Convite novo exige liberação posterior. Ativar não concede todas as obras; novas obras vinculam gestor e criador.
+- Migration 20261101_usuarios_obras_exclusao.sql e handler local preparados. Exclusão primeiro revoga acesso e desativa via RPC, depois Auth deleteUser(id,true), irreversível, preservando identidade histórica/FKs. Falha Auth deixa bloqueado para repetir. RLS consulta deleted_at para bloquear token antigo mesmo em corrida administrativa. Não excluir lançamentos.
+- MCP Supabase ausente nesta sessão: migration NÃO aplicada, Edge Function NÃO implantada; snapshot remoto não regenerado e SQLrollback NÃO executado. Não considerar funcional no ambiente público antes dessas etapas. Sem contas reais alteradas, push ou publicação. Testes locais Node em tests/usuarios-acessos.mjs; roteiro SQL em tests/usuarios-acessos.sql. Teste visual ainda pendente.
+
+### Validação e publicação autorizada — 01/11/2026
+- MCP disponível nesta retomada: migration usuarios_obras_exclusao aplicada e função usuarios versão 3 ACTIVE, verify_jwt=true. Delimitadores SQL corrigidos antes da aplicação. Snapshot regenerado do banco remoto.
+- npm run check passou; revisão independente sem bloqueios. SQL em rollback verificou obras explícitas, ativação sem concessão automática, criador/gestor em obra nova, proteção administrativa, preservação de notas/ensaios/mapas/itens e bloqueio de token após deleted_at. tests/schema.sql e tests/usuarios.sql passaram. Endpoint anônimo HTTP401.
+- Antes/depois: 481 notas, 1443 ensaios, uma obra e cinco contas Auth não excluídas. Nenhuma conta real excluída e nenhum lançamento real alterado nos testes. Aceite visual autenticado pelo proprietário continua pendente.

@@ -47,3 +47,11 @@ npm run check passou no estado final: build, lint e testes. SQL em rollback vali
 ### Publicação confirmada — 12/10/2026
 
 Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl_DiQZudbiPiEuHvkcGqMtiZn1naNP READY, alias https://controledenotasconcreto.vercel.app/ vinculado sem erro. HTTP200 e marcadores públicos de importação, mapa em branco, filtros de peça e desvio invertido conferidos. Revisão de código contra4019ed9 sem bloqueios. Esta confirmação supera as anotações anteriores de interface local/sem publicação para cadastro de peça, importação, filtros e mapa em branco.
+
+## Atualização — usuários e obras, 01/11/2026
+
+Publicação autorizada pelo usuário. Gestão permite selecionar obras por pessoa e excluir conta preservando todos os lançamentos. Sem seleção, a pessoa não acessa obras. Convite/reativação não concede todas as obras; obra nova vincula criador e gestor. Exclusão revoga acesso antes do soft delete no Auth; falha parcial mantém acesso bloqueado e permite repetir. Conta gestora protegida.
+
+Migration 20261101_usuarios_obras_exclusao.sql aplicada via MCP. Função usuarios versão 3 ACTIVE, JWT obrigatório. Snapshot remoto regenerado. npm run check e revisão independente sem bloqueios; SQL em rollback validou permissões, concessões, token antigo e preservação de notas/ensaios/mapas/itens. tests/schema.sql e tests/usuarios.sql passaram; endpoint anônimo HTTP 401.
+
+Contagens antes/depois: 481 notas, 1443 ensaios, uma obra e cinco contas Auth não excluídas. Nenhuma conta real excluída nos testes. Aceite visual com sessão do proprietário pendente.

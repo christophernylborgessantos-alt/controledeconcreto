@@ -8,7 +8,7 @@ export function criarHandler(admin,appUrl){
   for(let page=1;;page++){
    const {data,error}=await admin.auth.admin.listUsers({page,perPage:200});
    if(error)throw Error('Não foi possível listar usuários.');
-   users.push(...data.users);
+   users.push(...data.users.filter(u=>!u.deleted_at));
    if(data.users.length<200)return users;
   }
  }
@@ -45,6 +45,39 @@ export function criarHandler(admin,appUrl){
      }
     }
     return resposta(200,{usuarios:lista.sort((a,b)=>a.email.localeCompare(b.email))});
+   }
+   if(body.acao==='obras_catalogo'){
+    const obras=[];
+    for(let inicio=0;;inicio+=500){
+     const {data,error}=await admin.from('obras').select('id,nome').order('id').range(inicio,inicio+499);
+     if(error)throw Error('Obras indisponíveis.');obras.push(...data);if(data.length<500)break;
+    }
+    return resposta(200,{obras});
+   }
+   if(body.acao==='obras_usuario'){
+    if(!uuid.test(body.id??''))return resposta(400,{erro:'Usuário inválido.'});
+    const acessos=[];
+    for(let inicio=0;;inicio+=500){
+     const {data,error}=await admin.from('acessos_obras').select('obra_id').eq('usuario_id',body.id).order('obra_id').range(inicio,inicio+499);
+     if(error)throw Error('Acessos indisponíveis.');acessos.push(...data.map(a=>a.obra_id));if(data.length<500)break;
+    }
+    return resposta(200,{obras:acessos});
+   }
+   if(body.acao==='salvar_obras'){
+    if(body.id===gestor)return resposta(403,{erro:'Sua própria conta é protegida.'});
+    if(!uuid.test(body.id??'')||!Array.isArray(body.obras)||body.obras.length>10000||body.obras.some(id=>!uuid.test(id)))return resposta(400,{erro:'Confira as obras selecionadas.'});
+    const {error}=await admin.rpc('administrar_obras',{p_gestor:gestor,p_id:body.id,p_obras:[...new Set(body.obras)]});
+    if(error)return resposta(400,{erro:'Não foi possível salvar as obras. Recarregue a lista.'});
+    return resposta(200,{ok:true});
+   }
+   if(body.acao==='excluir'){
+    if(body.id===gestor)return resposta(403,{erro:'Sua própria conta não pode ser excluída.'});
+    if(!uuid.test(body.id??'')||typeof body.nome!=='string'||!body.nome.trim()||body.nome.length>200)return resposta(400,{erro:'Digite o nome da pessoa para confirmar.'});
+    const {error}=await admin.rpc('preparar_exclusao_usuario',{p_gestor:gestor,p_id:body.id,p_nome:body.nome.trim()});
+    if(error)return resposta(400,{erro:'Confira o nome e a conta selecionada. A conta gestora é protegida.'});
+    const {error:erroExcluir}=await admin.auth.admin.deleteUser(body.id,true);
+    if(erroExcluir)return resposta(500,{erro:'O acesso foi bloqueado, mas a exclusão não terminou. Tente excluir novamente. Os lançamentos estão preservados.'});
+    return resposta(200,{ok:true});
    }
    if(body.acao==='alterar'){
     if(body.id===gestor)return resposta(403,{erro:'Sua própria conta não pode ser alterada nesta tela.'});

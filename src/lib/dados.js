@@ -64,6 +64,10 @@ export function criarDados(cliente) {
       return conferir(conectar().rpc('salvar_mapa',{p_mapa:mapa,p_versao:mapa.versao??null}));
     },
     async excluirMapa(mapa){return conferir(conectar().rpc('excluir_mapa',{p_id:mapa.id,p_versao:mapa.versao}))},
+    async listarObrasUsuarios(){return (await gestao({acao:'obras_catalogo'})).obras},
+    async listarObrasUsuario(id){return (await gestao({acao:'obras_usuario',id})).obras},
+    async liberarObrasUsuario(id,obras){return gestao({acao:'salvar_obras',id,obras})},
+    async excluirUsuario(id,nome){return gestao({acao:'excluir',id,nome})},
     async listarUsuarios(){return (await gestao({acao:'listar'})).usuarios},
     async gerarLinkAcesso(usuario){return gestao({acao:'link_acesso',id:usuario.id})},
     async convidarUsuario(usuario){return gestao({acao:'convidar',nome:usuario.nome,email:usuario.email,role:usuario.role})},
@@ -137,4 +141,4 @@ export function criarDados(cliente) {
     }
   };
 }
-export const {importarNotas,listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);
+export const {listarObrasUsuarios,listarObrasUsuario,liberarObrasUsuario,excluirUsuario,importarNotas,listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);

@@ -32,3 +32,7 @@ Nenhuma dessas categorias, sozinha, concede gestão de usuários.
 Clique em Desativar e confirme. A conta e os registros permanecem cadastrados, mas novas consultas e escritas no banco ficam bloqueadas. Isso não apaga informações que a pessoa já tenha visto ou copiado.
 
 Para devolver acesso, clique em Reativar e confirme. A conta volta a acessar as obras na categoria escolhida.
+
+## Em preparação: exclusão e obras específicas
+Ações na lista de usuários: Obras liberadas e Excluir usuário. Confirmação pelo nome para excluir; seus lançamentos ficam preservados. Sua conta gestora é protegida. Sem obras selecionadas não há acesso. Convide a pessoa e depois libere as obras. Obras futuras não são liberadas automaticamente a terceiros, exceto ao criador da própria obra.
+ATENÇÃO: alteração local em 01/11/2026, banco e função ainda não atualizados; não utilizar em produção antes da implantação e validação.
