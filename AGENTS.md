@@ -173,3 +173,9 @@ Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl
 
 ### Publicação autorizada — Dashboard e regras de ensaios, 01/11/2026
 - Usuário autorizou publicar Visão geral/Aplicado vs teórico e os ajustes pendentes de 7/28/63 dias. PUBLICACAO.md registra escopo e verificações. Esta autorização supera o estado local/sem publicação descrito nas entradas anteriores, após confirmação do deployment.
+
+### Ajuste local da Visão geral — 01/11/2026
+- Indicador superior Pendências substituído por Volume aplicado em m³, calculado pelas notas da seleção atual. Tabela de pendências mantida.
+- Concretagens por mês trocou de posição com Resistência ao longo do tempo; Resistência/FCK28 trocou com FCK×resistência28. Filtros interativos mantidos nos respectivos gráficos. Renderização DEMO conferiu ordem e volume8,5m³. Sem banco/push/publicação.
+
+- Publicação deste ajuste de volume e posições autorizada expressamente pelo usuário em01/11/2026; escopo e verificação em PUBLICACAO.md.

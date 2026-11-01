@@ -71,3 +71,9 @@ Usuário autorizou atualizar e publicar as alterações locais: Dashboard com Ap
 Inclui regras confirmadas: uma amostra de 28 dias igual/superior ao FCK dispensa 63 dias dos vencidos e pendências e retira os 28 dias da contagem/filtro Abaixo do esperado; aos 7 dias basta uma amostra atingir 70% do FCK para retirar essa idade da contagem/filtro. Valores individuais preservados. Médias da Visão geral são descritivas; atendimento usa melhor amostra, sem média. Nenhuma declaração de aceitação estrutural.
 
 Revisão independente sem bloqueios. npm run check passou; regressões cobrem filtros, isolamento, cobertura elegível, zero/null, opcionais63, 7dias70%, melhores amostras28 e precisão decimal no limite105%. UI DEMO em memória conferiu desktop/móvel, barras/rosca por teclado, múltiplas seleções, etiquetas, período inválido, troca de obra, vazio e CSS de impressão. Não houve alteração de banco, contas ou lançamentos reais. Impressão física não executada.
+
+## Publicação autorizada — organização da Visão geral, 01/11/2026
+
+Indicador superior de Pendências substituído por Volume aplicado de concreto em m³, seguindo as notas filtradas. Concretagens por mês trocou de posição com Resistência ao longo do tempo; Resistência/FCK28 trocou com FCK×resistência28. Filtros e tabela de pendências preservados.
+
+Renderização DEMO confirmou o valor8,5m³ e a ordem dos gráficos. npm run check passou. Sem alteração de banco ou lançamentos reais. Usuário autorizou publicar este ajuste.
