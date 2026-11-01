@@ -45,6 +45,10 @@ export function criarDados(cliente) {
     return data;
   }
   return {
+    async importarEnsaios(obra,linhas){
+      if(!obra||!Array.isArray(linhas)||!linhas.length||linhas.length>500)throw Error('Selecione a obra e atualize entre 1 e 500 notas.');
+      return conferir(conectar().rpc('importar_resultados_ensaios',{p_obra:obra,p_linhas:linhas}));
+    },
     async importarNotas(obra,linhas){
       if(!obra||!Array.isArray(linhas)||!linhas.length||linhas.length>500)throw Error('Selecione a obra e importe entre 1 e 500 notas novas.');
       return conferir(conectar().rpc('importar_notas',{p_obra:obra,p_linhas:linhas}));
@@ -141,4 +145,4 @@ export function criarDados(cliente) {
     }
   };
 }
-export const {listarObrasUsuarios,listarObrasUsuario,liberarObrasUsuario,excluirUsuario,importarNotas,listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);
+export const {importarEnsaios,listarObrasUsuarios,listarObrasUsuario,liberarObrasUsuario,excluirUsuario,importarNotas,listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);

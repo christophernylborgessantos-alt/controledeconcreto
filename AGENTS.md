@@ -144,3 +144,11 @@ Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl
 - MCP disponível nesta retomada: migration usuarios_obras_exclusao aplicada e função usuarios versão 3 ACTIVE, verify_jwt=true. Delimitadores SQL corrigidos antes da aplicação. Snapshot regenerado do banco remoto.
 - npm run check passou; revisão independente sem bloqueios. SQL em rollback verificou obras explícitas, ativação sem concessão automática, criador/gestor em obra nova, proteção administrativa, preservação de notas/ensaios/mapas/itens e bloqueio de token após deleted_at. tests/schema.sql e tests/usuarios.sql passaram. Endpoint anônimo HTTP401.
 - Antes/depois: 481 notas, 1443 ensaios, uma obra e cinco contas Auth não excluídas. Nenhuma conta real excluída e nenhum lançamento real alterado nos testes. Aceite visual autenticado pelo proprietário continua pendente.
+## Dois modelos de importação — alteração local, 01/11/2026
+- Importar dados permite Modelo 1 (base inteira, comportamento anterior) e Modelo 2 (apenas resultados de ensaio), com download de XLSX vazio por modelo.
+- Modelo 2 usa NF exata na obra; preenchidos substituem, inclusive zero; vazios preservam. Prévia antes/depois, confirmação e lote atômico com versão. Não altera outros campos, não cria notas/locais; bloqueia NF ausente/repetida e peça não estrutural com resultados para atualizar.
+- Migration 20261101_importar_resultados_ensaios.sql aplicada via MCP; SQL tests/importacao-ensaios.sql passou em rollback. Sem importar dados reais da planilha enviada.
+- Leitura reconhece cabeçalhos da planilha enviada e namespace XML prefixado; JSZip 3.10.2 declarado diretamente, mesma versão anterior do lockfile. Modelos reabertos e leitura de 400 linhas (cabeçalho incluído) conferidos. UI DEMO em memória verificou download, leitura, antes/depois, cancelar/confirmar e tela móvel. Revisão independente sem bloqueios. Alteração ainda sem push/publicação.
+
+### Publicação autorizada — importação em dois modelos, 01/11/2026
+- Usuário solicitou publicar esta alteração. Revisão e testes documentados em PUBLICACAO.md; migration já aplicada. A anotação de alteração local acima descreve o estado anterior à autorização.

@@ -16,3 +16,14 @@ Linhas inválidas bloqueiam a confirmação. A gravação no servidor é atômic
 ## Verificação — 12/10/2026
 
 `npm run check` passou (build, lint e testes). Testes SQL com rollback verificaram duplicidade, preservação dos registros existentes, ensaios, precisão do esperado, isolamento entre obras, permissões e reversão integral. A interface foi exercitada com dados DEMO em memória, sem gravar notas fictícias no banco: prévia, erros, duplicidade, cancelamento e confirmação. Revisão de código concluída sem bloqueios. Migration `20261012_importacao.sql` aplicada via MCP; interface ainda sem publicação.
+# Dois modelos de importação
+
+Escolha o modelo em **Importar dados**. Cada opção possui **Baixar planilha modelo**: XLSX vazio, cabeçalho na primeira linha, NF como texto e formato reconhecido pelo sistema. Preencha a partir da linha 2.
+
+**Modelo 1 — Base inteira:** mantém o fluxo de cadastro de notas novas e ensaios. Data, NF, local, FCK e volume obrigatórios. NFs existentes na obra são ignoradas e preservadas.
+
+**Modelo 2 — Atualização apenas dos resultados de ensaio:** NF e R1/R2 de 7, 28 e 63 dias. Selecione a obra; a NF deve corresponder exatamente, incluindo zeros. Valores preenchidos substituem resultados existentes, inclusive zero; vazios preservam. Pelo menos uma coluna de resultado deve estar associada. Colunas extras da planilha de origem (data, FCK e slump) não alteram o cadastro. Não cria notas ou locais e não altera volumes, classificação, observações ou esperado.
+
+Antes de confirmar, confira os valores atuais e novos na prévia. NFs inexistentes, repetidas, resultados inválidos ou peças não estruturais bloqueiam o lote para conferência. Até 500 notas por atualização. O lote é atômico: se alguma nota mudou após a prévia, recarregue antes de tentar novamente.
+
+O arquivo XLSX com namespace prefixado, como a planilha de referência enviada, também é aceito. A leitura acontece no navegador; somente alterações confirmadas são enviadas ao banco.

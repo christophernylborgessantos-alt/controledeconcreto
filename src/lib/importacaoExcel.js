@@ -4,7 +4,7 @@ export const normalizarCabecalho=v=>String(v??'').normalize('NFKD').replace(/[\u
 export const nomeLocalImportacao=v=>String(v??'').trim().replace(/\s+/g,' ').toLocaleLowerCase('pt-BR');
 export const camposImportacao=[
  {chave:'data',nome:'Data de aplicação',obrigatorio:true,aliases:['data','aplicacao','datadeaplicacao','dataaplicacao','datadaconcretagem']},
- {chave:'numero',nome:'NF',obrigatorio:true,aliases:['nf','nota','notafiscal','numerodanota','numerodanf','numeronf','numeronota','nonf','nnf']},
+ {chave:'numero',nome:'NF',obrigatorio:true,aliases:['nf','nota','notafiscal','numerodanota','numerodanf','numeronf','numeronota','nonf','nnf','numerodanotafiscal']},
  {chave:'local',nome:'Local',obrigatorio:true,aliases:['local','localdeaplicacao','localaplicacao']},
  {chave:'fck',nome:'FCK · MPa',obrigatorio:true,aliases:['fck','fckmpa','resistencia','resistenciampa']},
  {chave:'volume',nome:'Volume · m³',obrigatorio:true,aliases:['volume','volumem3','vol','volm3']},
@@ -12,7 +12,7 @@ export const camposImportacao=[
  {chave:'peca_estrutural',nome:'Peça estrutural',aliases:['peca','pecaestrutural']},
  {chave:'observacoes',nome:'Observações',aliases:['observacoes','observacao','obs']},
  {chave:'nao_estrutural',nome:'Peça não estrutural',aliases:['naoestrutural','pecanaoestrutural']},
- ...idades.flatMap(idade=>[1,2].map(r=>({chave:`r${idade}_${r}`,nome:`${idade} dias R${r}`,aliases:[`${idade}diasr${r}`,`r${r}${idade}dias`,`${idade}dr${r}`,`r${r}${idade}d`,`resultado${r}${idade}dias`]})))
+ ...idades.flatMap(idade=>[1,2].map(r=>({chave:`r${idade}_${r}`,nome:`${idade} dias R${r}`,aliases:[`${idade}diasr${r}`,`r${r}${idade}dias`,`${idade}dr${r}`,`r${r}${idade}d`,`resultado${r}${idade}dias`,`${idade}diasresultado${r}mpa`]})))
 ];
 
 function valorCelula(celula){
@@ -29,7 +29,19 @@ function valorCelula(celula){
 
 export async function lerExcelImportacao(buffer){
  const {default:ExcelJS}=await import('exceljs');
- const livro=new ExcelJS.Workbook();await livro.xlsx.load(buffer);
+ // ExcelJS não reconhece elementos com prefixo no namespace principal do XLSX.
+ const {default:JSZip}=await import('jszip');const zip=await JSZip.loadAsync(buffer);
+ let alterado=false;
+ for(const nome of Object.keys(zip.files).filter(n=>/^xl\/.*\.xml$/.test(n))){
+  let xml=await zip.file(nome).async('string');
+  const prefixo=xml.match(/xmlns:([A-Za-z_][\w.-]*)="http:\/\/schemas.openxmlformats.org\/spreadsheetml\/2006\/main"/);
+  if(prefixo&&!/xmlns="http:\/\/schemas.openxmlformats.org\/spreadsheetml\/2006\/main"/.test(xml)){
+   const p=prefixo[1].replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+   xml=xml.replace(new RegExp(`(<\\/?)(?:${p}):`,'g'),'$1').replace(prefixo[0],'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"');
+   zip.file(nome,xml);alterado=true;
+  }
+ }
+ const livro=new ExcelJS.Workbook();await livro.xlsx.load(alterado?await zip.generateAsync({type:'uint8array'}):buffer);
  const abas=livro.worksheets.filter(a=>a.state==='visible').map(a=>{
   const linhas=[];
   a.eachRow(linha=>{

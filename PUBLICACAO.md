@@ -55,3 +55,11 @@ Publicação autorizada pelo usuário. Gestão permite selecionar obras por pess
 Migration 20261101_usuarios_obras_exclusao.sql aplicada via MCP. Função usuarios versão 3 ACTIVE, JWT obrigatório. Snapshot remoto regenerado. npm run check e revisão independente sem bloqueios; SQL em rollback validou permissões, concessões, token antigo e preservação de notas/ensaios/mapas/itens. tests/schema.sql e tests/usuarios.sql passaram; endpoint anônimo HTTP 401.
 
 Contagens antes/depois: 481 notas, 1443 ensaios, uma obra e cinco contas Auth não excluídas. Nenhuma conta real excluída nos testes. Aceite visual com sessão do proprietário pendente.
+
+## Publicação autorizada — dois modelos de importação, 01/11/2026
+
+Modelo 1 mantém o cadastro da base; Modelo 2 atualiza apenas resultados de ensaios por NF exata na obra. Preenchidos substituem, inclusive zero; vazios preservam. Cada opção baixa XLSX modelo vazio. Prévia antes/depois, confirmação e validação de NF inexistente/repetida. Não altera demais campos nem cria notas no Modelo 2.
+
+Migration 20261101_importar_resultados_ensaios.sql já aplicada; SQL em rollback verificou autorização, zero, preservação, controle de versão e atomicidade. Revisão independente sem bloqueios. Interface DEMO em memória validou downloads, leitura, prévia, cancelar/confirmar e tela móvel. A planilha enviada foi lida, sem importar seus registros reais. JSZip declarado em 3.10.2, mesma versão já presente no lockfile.
+
+Publicação desta versão autorizada expressamente pelo usuário. Aceite de uma importação real pelo proprietário continua pendente; o agente não executou importação real.

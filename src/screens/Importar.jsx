@@ -4,8 +4,17 @@ import {podeEditar,dataBR,opcional63} from '../lib/regras.js';
 import {lerExcelImportacao,camposImportacao,colunasImportacao,sugerirColunas,previaImportacao,nomeLocalImportacao} from '../lib/importacaoExcel.js';
 import {Stats} from '../components/index.jsx';
 import '../importacao.css';
+import ImportarEnsaios from './ImportarEnsaios.jsx';
+import {baixarModeloImportacao} from '../lib/importacaoEnsaios.js';
 
-export default function Importar({data,obra,setObra,role,commit,importador=importarNotas}){
+export default function Importar(props){
+ const [modelo,setModelo]=useState(1),[baixando,setBaixando]=useState(false),[erroModelo,setErroModelo]=useState('');
+ async function baixar(){setBaixando(true);setErroModelo('');try{await baixarModeloImportacao(modelo)}catch{setErroModelo('Não foi possível gerar a planilha modelo. Tente novamente.')}finally{setBaixando(false)}}
+ if(!podeEditar(props.role))return <section className="card"><h2>Importar dados</h2><p>Seu perfil permite consulta. Apenas Engenheiro e Analista podem importar dados.</p></section>;
+ return <><section className="card"><h2>Importar dados</h2><label>Modelo de importação<select value={modelo} onChange={e=>{setModelo(Number(e.target.value));setErroModelo('')}}><option value={1}>Modelo 1 — Base inteira</option><option value={2}>Modelo 2 — Atualização apenas dos resultados de ensaio</option></select></label><p>{modelo===1?'Cadastra notas novas com os ensaios disponíveis. NFs existentes são preservadas.':'Atualiza resultados das notas existentes na obra. Preenchidos substituem; vazios preservam.'}</p><button disabled={baixando} onClick={baixar}>{baixando?'Gerando…':`Baixar planilha modelo ${modelo}`}</button>{erroModelo&&<p role="alert">{erroModelo}</p>}</section>{modelo===1?<ImportarBase {...props}/>:<ImportarEnsaios {...props} key={props.obra}/>}</>;
+}
+
+function ImportarBase({data,obra,setObra,role,commit,importador=importarNotas}){
  const [abas,setAbas]=useState([]),[indice,setIndice]=useState(0),[cabecalho,setCabecalho]=useState(1),[colunas,setColunas]=useState({}),[arquivo,setArquivo]=useState('');
  const [busy,setBusy]=useState(false),[erro,setErro]=useState(''),[confirmando,setConfirmando]=useState(false),[resultado,setResultado]=useState(null),[pagina,setPagina]=useState(1);
  const aba=abas[indice];

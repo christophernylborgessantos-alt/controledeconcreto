@@ -8,4 +8,5 @@ import './usuarios-api.mjs';
 import './usuarios-dados.mjs';
 import './mapeamento.mjs';
 import './importacao.mjs';
+import './importacao-ensaios.mjs';
 import './usuarios-acessos.mjs';

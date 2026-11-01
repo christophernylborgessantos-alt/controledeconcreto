@@ -82,3 +82,6 @@ Trocar obra troca listas e totais. Alterações reaparecem ao recarregar neste n
 ### Publicação confirmada — 12/10/2026
 
 Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl_DiQZudbiPiEuHvkcGqMtiZn1naNP READY, alias https://controledenotasconcreto.vercel.app/ vinculado sem erro. HTTP200 e marcadores públicos de importação, mapa em branco, filtros de peça e desvio invertido conferidos. Revisão de código contra4019ed9 sem bloqueios. Esta confirmação supera as anotações anteriores de interface local/sem publicação para cadastro de peça, importação, filtros e mapa em branco.
+### Importação em dois modelos
+
+Na aba Importar dados, selecionar Modelo 1 — Base inteira (cadastro atual de notas novas) ou Modelo 2 — Atualização apenas dos resultados de ensaio. Cada opção oferece download de planilha modelo XLSX vazia. Modelo 2 identifica NF exata na obra selecionada e mostra valores antes/depois; preenchidos substituem, zero é válido e vazios preservam. Não modifica demais campos nem cria notas. NFs inexistentes/duplicadas, resultados inválidos e peças não estruturais com resultados para atualizar bloqueiam confirmação. Atualização atômica com controle de versão, até 500 notas. Engenheiro/Analista escrevem; Cliente não importa.

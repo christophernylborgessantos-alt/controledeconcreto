@@ -13,6 +13,7 @@
   "dependencies": {
     "@supabase/supabase-js": "latest",
     "exceljs": "4.4.0",
+    "jszip": "3.10.2",
     "react": "latest",
     "react-dom": "latest"
   },
