@@ -63,3 +63,11 @@ Modelo 1 mantém o cadastro da base; Modelo 2 atualiza apenas resultados de ensa
 Migration 20261101_importar_resultados_ensaios.sql já aplicada; SQL em rollback verificou autorização, zero, preservação, controle de versão e atomicidade. Revisão independente sem bloqueios. Interface DEMO em memória validou downloads, leitura, prévia, cancelar/confirmar e tela móvel. A planilha enviada foi lida, sem importar seus registros reais. JSZip declarado em 3.10.2, mesma versão já presente no lockfile.
 
 Publicação desta versão autorizada expressamente pelo usuário. Aceite de uma importação real pelo proprietário continua pendente; o agente não executou importação real.
+
+## Publicação autorizada — Dashboard e regras de ensaios, 01/11/2026
+
+Usuário autorizou atualizar e publicar as alterações locais: Dashboard com Aplicado vs teórico preservado e Visão geral inspirada na referência, indicadores, gráficos SVG, filtros cruzados com seleção múltipla, tabelas, impressão e responsividade. Cliques em mês/FCK/idade/situação/faixas combinam a seleção de todo o painel. Guia em docs/dashboard-visao-geral.md.
+
+Inclui regras confirmadas: uma amostra de 28 dias igual/superior ao FCK dispensa 63 dias dos vencidos e pendências e retira os 28 dias da contagem/filtro Abaixo do esperado; aos 7 dias basta uma amostra atingir 70% do FCK para retirar essa idade da contagem/filtro. Valores individuais preservados. Médias da Visão geral são descritivas; atendimento usa melhor amostra, sem média. Nenhuma declaração de aceitação estrutural.
+
+Revisão independente sem bloqueios. npm run check passou; regressões cobrem filtros, isolamento, cobertura elegível, zero/null, opcionais63, 7dias70%, melhores amostras28 e precisão decimal no limite105%. UI DEMO em memória conferiu desktop/móvel, barras/rosca por teclado, múltiplas seleções, etiquetas, período inválido, troca de obra, vazio e CSS de impressão. Não houve alteração de banco, contas ou lançamentos reais. Impressão física não executada.

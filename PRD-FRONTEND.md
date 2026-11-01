@@ -85,3 +85,21 @@ Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl
 ### Importação em dois modelos
 
 Na aba Importar dados, selecionar Modelo 1 — Base inteira (cadastro atual de notas novas) ou Modelo 2 — Atualização apenas dos resultados de ensaio. Cada opção oferece download de planilha modelo XLSX vazia. Modelo 2 identifica NF exata na obra selecionada e mostra valores antes/depois; preenchidos substituem, zero é válido e vazios preservam. Não modifica demais campos nem cria notas. NFs inexistentes/duplicadas, resultados inválidos e peças não estruturais com resultados para atualizar bloqueiam confirmação. Atualização atômica com controle de versão, até 500 notas. Engenheiro/Analista escrevem; Cliente não importa.
+
+### Dispensa dos 63 dias por um resultado aos 28 dias
+
+Basta R1 ou R2 aos 28 dias atingir ou superar o FCK da nota para tornar os 63 dias opcionais. O outro resultado pode estar abaixo e continua destacado. Os 63 dias dispensados ficam fora de pendentes/vencidos e do filtro Vencido; resultados já lançados permanecem consultáveis. Sem resultado aos 28 dias ou com todos abaixo do FCK, a obrigação permanece. Esta regra substitui a exigência anterior de todos os resultados informados atingirem o FCK.
+
+### Classificação de resistência aos 28 dias
+
+Para a contagem e o filtro Abaixo do esperado, 28 dias não é classificado abaixo se pelo menos uma amostra atingir ou superar o FCK. Se houver resultado informado e nenhum atingir o FCK, continua abaixo. Sem resultados, é pendência conforme prazo. A exceção não modifica a classificação de 7/63 dias. Os valores individuais permanecem visíveis; a dispensa dos 63 dias por uma amostra suficiente aos 28 dias continua válida.
+
+### Classificação aos 7 dias
+
+Aos 7 dias, abaixo do esperado na contagem e no filtro significa haver resultado informado e nenhuma amostra atingir pelo menos 70% do FCK. Igualdade atende, em qualquer posição R1/R2. Sem resultados, tratar como pendência pelo prazo. Aos 28 dias o limite continua 100% do FCK, com uma amostra suficiente; 63 opcional se uma amostra28 atingir o FCK.
+
+### Dashboard: Aplicado vs teórico e Visão geral
+
+Duas opções internas. Aplicado vs teórico mantém o comparativo e filtros existentes. Visão geral usa referência escura com indicadores e gráficos interativos: evolução descritiva de resistência, FCK versus média28, distribuição de FCK, faixas do melhor resultado28/FCK, cobertura por idade, slump numérico por FCK e notas/volume por mês. Tabelas de notas por aplicação e pendências acompanham a seleção.
+
+Filtros cruzados por obra, período de aplicação, local, peça, FCKs, meses, idades, situações e faixas; seleção múltipla OR por dimensão e AND entre dimensões. Clique novamente remove, etiquetas ativas permitem limpar individualmente, Limpar filtros restaura a obra e trocar obra reinicia. Categorias permanecem disponíveis para seleção. Impressão/PDF usa seleção atual. Layout responsivo e controles por teclado. Guia de fórmulas e denominadores em docs/dashboard-visao-geral.md. Sem novos dados persistidos.

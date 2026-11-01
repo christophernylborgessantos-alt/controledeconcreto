@@ -4,11 +4,15 @@ export function hoje(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'America
 export function prazo(date,days){const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10)}
 export function dataBR(d){return d.split('-').reverse().join('/')}
 export function situacao(ensaio,date,age,today=hoje(),naoEstrutural=false){if(naoEstrutural)return 'Não necessário';return ensaio.resultados.some(v=>v!==null)?'Preenchido':prazo(date,age)<today?'Vencido':prazo(date,age)===today?'Vence hoje':'No prazo'}
-export function baixo(e,naoEstrutural=false){return !naoEstrutural&& e.esperado!==null&&e.resultados.some(v=>v!==null&&v<e.esperado)}
+export function baixo(e,naoEstrutural=false,idade){
+  if(naoEstrutural||e.esperado===null)return false;
+  if((idade===7||idade===28)&&e.resultados.some(v=>Number.isFinite(v)&&v>=e.esperado))return false;
+  return e.resultados.some(v=>v!==null&&v<e.esperado);
+}
 export function opcional63(nota){
   const e=nota.ensaios[28];
   const informados=e.resultados.filter(v=>v!==null);
-  return !nota.nao_estrutural&&Number.isFinite(nota.fck)&&informados.length>0&&informados.every(v=>Number.isFinite(v)&&v>=nota.fck);
+  return !nota.nao_estrutural&&Number.isFinite(nota.fck)&&informados.some(v=>Number.isFinite(v)&&v>=nota.fck);
 }
 export function situacaoNota(nota,idade,today=hoje()){
   const estado=situacao(nota.ensaios[idade],nota.data,idade,today,nota.nao_estrutural);

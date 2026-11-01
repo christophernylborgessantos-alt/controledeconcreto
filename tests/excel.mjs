@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import ExcelJS from 'exceljs';
 const {gerarExcelRelatorio}=await import('../src/lib/relatorioExcel.js');
-const ensaios={7:{esperado:20,resultados:[0,null]},28:{esperado:30,resultados:[30,null]},63:{esperado:35,resultados:[null,null]}};
+const ensaios={7:{esperado:20,resultados:[0,null]},28:{esperado:30,resultados:[30,29]},63:{esperado:35,resultados:[null,null]}};
 const relatorio={obra:{nome:'Obra teste'},volume:8.5,notas:[{data:'2026-10-12',numero:'00123',fck:30,local:'Laje',volume:8.5,ensaios},{data:'2026-10-12',numero:'=1+1',fck:30,local:'=HYPERLINK("https://exemplo.invalid")',volume:0,ensaios,nao_estrutural:true}]};
 relatorio.teorico=20;
 const buffer=await gerarExcelRelatorio(relatorio);

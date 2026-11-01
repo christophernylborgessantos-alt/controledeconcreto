@@ -1,4 +1,5 @@
 import './regras.mjs';
+import './visao-geral.mjs';
 import './relatorios.mjs';
 import './excel.mjs';
 import './dados.mjs';

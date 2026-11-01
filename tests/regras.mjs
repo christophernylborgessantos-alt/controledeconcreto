@@ -27,14 +27,14 @@ const {opcional63,situacaoNota,resumoEnsaios}=await import('../src/lib/regras.js
 const aprovada={data:'2020-01-01',fck:30,ensaios:{7:{esperado:20,resultados:[20,20]},28:{esperado:30,resultados:[30,31]},63:{esperado:35,resultados:[null,null]}}};
 assert.equal(opcional63(aprovada),true,'Igualdade atinge o FCK da nota');
 assert.equal(situacaoNota(aprovada,63,'2026-10-12'),'Opcional');
-assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[29,35]}}}),false,'Média não substitui os dois resultados');
+assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[29,35]}}}),true,'Um resultado suficiente dispensa os 63 dias mesmo com outro abaixo');
 assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[30,null]}}}),true);
 assert.equal(opcional63({...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:null,resultados:[30,31]}}}),true);
 assert.equal(situacaoNota({...aprovada,nao_estrutural:true},63),'Não necessário');
 const resumoIdades=resumoEnsaios([aprovada,{...aprovada,nao_estrutural:true}],'2026-10-12');
 assert.equal(resumoIdades[63].obrigatorios,0);assert.equal(resumoIdades[63].opcionais,1);assert.equal(resumoIdades[63].vencidos,0);assert.equal(resumoIdades[63].dispensados,1);
 assert.equal(resumoIdades[28].preenchidos,1);
-const corrigida={...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[29,35]}}};
+const corrigida={...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados:[29,29]}}};
 assert.equal(situacaoNota(corrigida,63,'2026-10-12'),'Vencido','Correção aos 28 reativa a cobrança');
 const parcial63={...aprovada,ensaios:{...aprovada.ensaios,63:{esperado:35,resultados:[36,null]}}};
 assert.equal(situacaoNota(parcial63,63,'2026-10-12'),'Preenchido');
@@ -59,3 +59,28 @@ assert.equal(esperadoFck(30,63),30);
 for(const [resultado,abaixo] of [[20.99,true],[21,false],[21.01,false],[0,true]])assert.equal(baixo({esperado:esperadoFck(30,7),resultados:[resultado,null]}),abaixo);
 
 assert.equal(esperadoFck(30.123456,7),21.086419);
+
+for(const resultados of [[29,30],[30,29],[null,30],[30,null]]){
+ const n={...aprovada,ensaios:{...aprovada.ensaios,28:{esperado:30,resultados}}};
+ assert.equal(situacaoNota(n,63,'2026-11-01'),'Opcional');
+ assert.equal([n].filter(n=>situacaoNota(n,63,'2026-11-01')==='Vencido').length,0,'Não entra no filtro vencido');
+ const resumo=resumoEnsaios([n],'2026-11-01')[63];
+ assert.equal(resumo.obrigatorios,0);assert.equal(resumo.vencidos,0);assert.equal(resumo.opcionais,1);
+ assert.equal(baixo(n.ensaios[28],false,28),false,'28 dias com uma amostra suficiente não entra em abaixo do esperado');
+}
+
+for(const resultados of [[29,30],[30,29],[0,31],[31,0]]){
+ const e={esperado:30,resultados};
+ assert.equal(baixo(e,false,28),false);
+ assert.equal(baixo(e,false,7),false,'Uma amostra suficiente também atende aos 7 dias');
+ assert.equal(baixo(e,false,63),true,'A exceção não se aplica a 63 dias');
+ assert.equal([e].filter(e=>baixo(e,false,28)).length,0,'Não entra no filtro nem na contagem');
+}
+for(const resultados of [[29,29],[29,null],[null,29],[0,null]])assert.equal(baixo({esperado:30,resultados},false,28),true);
+assert.equal(baixo({esperado:30,resultados:[null,null]},false,28),false);
+
+for(const [resultados,abaixo] of [[[20.99,null],true],[[null,20.99],true],[[20,20.99],true],[[21,null],false],[[null,21],false],[[20,21],false],[[21,20],false],[[0,21.01],false],[[0,null],true],[[null,null],false]]){
+ const e={esperado:esperadoFck(30,7),resultados};
+ assert.equal(baixo(e,false,7),abaixo,'7 dias: basta uma amostra atingir 70% do FCK');
+ assert.equal([e].filter(e=>baixo(e,false,7)).length,abaixo?1:0);
+}

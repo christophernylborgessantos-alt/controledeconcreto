@@ -152,3 +152,24 @@ Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl
 
 ### Publicação autorizada — importação em dois modelos, 01/11/2026
 - Usuário solicitou publicar esta alteração. Revisão e testes documentados em PUBLICACAO.md; migration já aplicada. A anotação de alteração local acima descreve o estado anterior à autorização.
+
+## Regra dos 63 dias — 01/11/2026
+- Orientação expressa: basta um dos resultados informados aos 28 dias atingir ou superar o FCK para dispensar os 63 dias, mesmo que o outro esteja abaixo. Substitui a exigência anterior de todos os resultados atingirem o FCK.
+- Regra central opcional63 atualizada; cálculos, filtros de vencidos, alertas, Dashboard, relatórios e Excel usam a mesma dispensa. Resultados abaixo continuam destacados; histórico dos 63 dias preservado. Sem resultados aos 28 dias ou todos abaixo, 63 continua obrigatório.
+- Sem migration ou alteração de dados reais. Testes de regressão cobrem posições R1/R2, igualdade, resumo e exclusão do filtro vencido; Excel reaberto confere Opcional. Alteração local, ainda sem publicação.
+
+### Indicador e filtro Abaixo do esperado aos 28 dias — 01/11/2026
+- Orientação expressa posterior: quando R1 ou R2 de 28 dias for igual ou superior ao FCK, essa idade não entra na contagem nem no filtro Abaixo do esperado, mesmo que a outra amostra esteja abaixo. A exceção é somente aos 28 dias; 7 e 63 mantêm suas regras. Valores individuais continuam registrados e visíveis, com destaque do valor baixo no formulário/relatório/Excel.
+- baixo recebe idade e todos os usos em Ensaios passam a idade correta. Regressões cobrem posições, igualdade, zero, ausência e manutenção das regras 7/63. Renderização DEMO verificou ausência de badge baixo/vencido. Sem migration ou alterações de dados reais; alteração local, sem publicação.
+
+### Abaixo do esperado aos 7 dias — 01/11/2026
+- Orientação posterior: aos 7 dias basta uma amostra atingir ou superar 70% do FCK para a idade não entrar na contagem/filtro Abaixo do esperado. Igualdade atende; se houver resultado e nenhum atingir 70%, continua abaixo. Sem resultados, apenas pendência conforme prazo. Regra28 e dispensa63 mantidas. Substitui a indicação anterior de manter classificação7 por qualquer amostra baixa. Valores individuais preservados. Regressão cobre R1/R2, limite, zero e vazio. Alteração local, sem publicação.
+
+## Dashboard em duas visões — alteração local, 01/11/2026
+- Aplicado vs teórico preserva o comparativo existente. Visão geral segue referência escura com sete indicadores, sete gráficos interativos e tabelas de notas/pendências. Sem números demonstrativos em produção.
+- Filtros cruzados globais por período/local/peça e cliques múltiplos em FCK/mês/idade/situação/faixas, com etiquetas removíveis, limpar e reinício na troca de obra. Combina OR na dimensão e AND entre dimensões. Impressão leva critérios atuais; celular sem transbordamento.
+- Cálculos em src/lib/visaoGeral.js e regressões tests/visao-geral.mjs. Cobertura somente obrigatórios elegíveis; zero informado; opcionais63 dispensados. Melhor amostra28 para FCK/faixas; médias apenas descritivas. Slump textual não vira número. Limite105% compara inteiros com seis casas para evitar erro decimal.
+- npm run check passou; revisão independente sem bloqueios após correção do limite105%. UI DEMO em memória passou, inclusive cliques em barra/rosca por teclado, seleção múltipla, filtros, impressão CSS e celular. Capturas docs/verificacao/dashboard-visao-geral.png e dashboard-visao-geral-mobile.png somente DEMO. Guia docs/dashboard-visao-geral.md. Sem migration/dados reais/push/publicação; branch codex/dashboard-visao-geral preserva os ajustes locais anteriores dos ensaios.
+
+### Publicação autorizada — Dashboard e regras de ensaios, 01/11/2026
+- Usuário autorizou publicar Visão geral/Aplicado vs teórico e os ajustes pendentes de 7/28/63 dias. PUBLICACAO.md registra escopo e verificações. Esta autorização supera o estado local/sem publicação descrito nas entradas anteriores, após confirmação do deployment.

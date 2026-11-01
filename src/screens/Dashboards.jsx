@@ -1,8 +1,14 @@
 import {useState} from 'react';
 import {total,resumoLocal,filtrarNotas,resumoEnsaios,idades,hoje,dataBR} from '../lib/regras.js';
 import {Stats} from '../components/index.jsx';
+import VisaoGeral from './VisaoGeral.jsx';
 
-export default function Dashboards({data,obra}){
+export default function Dashboards(props){
+  const [visao,setVisao]=useState('aplicado');
+  return <><div className="dashboard-view-switch" role="group" aria-label="Opções do Dashboard"><button aria-pressed={visao==='aplicado'} className={visao==='aplicado'?'primary':''} onClick={()=>setVisao('aplicado')}>Aplicado vs teórico</button><button aria-pressed={visao==='geral'} className={visao==='geral'?'primary':''} onClick={()=>setVisao('geral')}>Visão geral</button></div>{visao==='geral'?<VisaoGeral {...props} key={props.obra}/>:<AplicadoTeorico {...props}/>}</>;
+}
+
+function AplicadoTeorico({data,obra}){
   const [filtros,setFiltros]=useState({obra,de:'',ate:'',local:'',fck:'',peca:''});
   const ativos=filtros.obra===obra?filtros:{obra,de:'',ate:'',local:'',fck:'',peca:''};
   const selecionar=(campo,valor)=>setFiltros({...ativos,[campo]:valor});
