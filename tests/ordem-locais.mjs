@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {ordenarLocaisAplicadoTeorico} from '../src/lib/regras.js';
+const nomes=['Térreo','3º pavimento','ESTACAS','4° pavimento Lazer','2º pavimento','Contenção','5º PAVIMENTO TIPO 1','Fundações','1º pavimento'];
+const locais=nomes.map((nome,i)=>({id:String(i),nome,created_at:`2026-01-${String(i+1).padStart(2,'0')}T10:00:00Z`}));
+const esperado=['ESTACAS','Contenção','Fundações','Térreo','1º pavimento','2º pavimento','3º pavimento','4° pavimento Lazer','5º PAVIMENTO TIPO 1'];
+assert.deepEqual(ordenarLocaisAplicadoTeorico(locais).map(l=>l.nome),esperado);
+assert.deepEqual(locais.map(l=>l.nome),nomes,'Não altera o array compartilhado');
+const novos=[{id:'z',nome:'Cobertura',created_at:'2026-02-02T10:00:00Z'},{id:'a',nome:'6º pavimento',created_at:'2026-02-01T10:00:00Z'}];
+assert.deepEqual(ordenarLocaisAplicadoTeorico([...novos,...locais]).map(l=>l.nome),[...esperado,'6º pavimento','Cobertura'],'Próximos locais seguem cadastro crescente, independente do UUID/nome');
+assert.equal(ordenarLocaisAplicadoTeorico([{id:'novo',nome:'4º pavimento técnico',created_at:'2026-03-01T00:00:00Z'},...locais]).at(-1).nome,'4º pavimento técnico','Nome novo não entra entre os nove locais existentes');
+assert.deepEqual(ordenarLocaisAplicadoTeorico([{nome:'Novo B'},{nome:'Novo A'}]).map(l=>l.nome),['Novo B','Novo A'],'Sem data, preserva a ordem recebida');
+assert.deepEqual(ordenarLocaisAplicadoTeorico([{nome:'  CONTENCAO '},{nome:'estacas'}]).map(l=>l.nome),['estacas','  CONTENCAO ']);
+console.log('Aplicado x teórico: sequência solicitada, novos locais por cadastro e array original preservados.');

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {total,resumoLocal,filtrarNotas,resumoEnsaios,idades,hoje,dataBR} from '../lib/regras.js';
+import {total,resumoLocal,filtrarNotas,resumoEnsaios,idades,hoje,dataBR,ordenarLocaisAplicadoTeorico} from '../lib/regras.js';
 import {Stats} from '../components/index.jsx';
 import VisaoGeral from './VisaoGeral.jsx';
 
@@ -13,7 +13,7 @@ function AplicadoTeorico({data,obra}){
   const ativos=filtros.obra===obra?filtros:{obra,de:'',ate:'',local:'',fck:'',peca:''};
   const selecionar=(campo,valor)=>setFiltros({...ativos,[campo]:valor});
   const todas=data.notas.filter(n=>n.obra_id===obra);
-  const locaisObra=data.locais.filter(l=>l.obra_id===obra);
+  const locaisObra=ordenarLocaisAplicadoTeorico(data.locais.filter(l=>l.obra_id===obra));
   const locais=locaisObra.filter(l=>!ativos.local||l.id===ativos.local);
   const invalido=ativos.de&&ativos.ate&&ativos.de>ativos.ate;
   const notes=invalido?[]:filtrarNotas(todas,{...ativos,obra});

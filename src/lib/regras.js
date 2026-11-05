@@ -33,6 +33,21 @@ export function resumoEnsaios(notas,today=hoje()){
   }));
 }
 export function total(notes){return Number(notes.reduce((s,n)=>s+n.volume,0).toFixed(6))}
+export function ordenarLocaisAplicadoTeorico(locais){
+  function prioridade(local){
+    const nome=local.nome.toLocaleLowerCase('pt-BR').replace(/[º°ª]/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ');
+    const base=['estacas','contencao','fundacoes','terreo'].indexOf(nome);
+    if(base>=0)return base;
+    const pavimento=nome.match(/^([1-5])\s*pavimento(?:\s+(.*))?$/);
+    if(pavimento){
+      const numero=Number(pavimento[1]),sufixo=pavimento[2]||'';
+      if((numero<=3&&!sufixo)||(numero===4&&sufixo==='lazer')||(numero===5&&/^tipo(?: 1)?$/.test(sufixo)))return 3+numero;
+    }
+    return 9;
+  }
+  const criacao=local=>Number.isFinite(Date.parse(local.created_at))?Date.parse(local.created_at):Infinity;
+  return [...locais].sort((a,b)=>prioridade(a)-prioridade(b)||(criacao(a)<criacao(b)?-1:criacao(a)>criacao(b)?1:0));
+}
 export function podeEditar(role){return ['Christopher','Analista'].includes(role)}
 export function filtrarNotas(notas,{obra,de='',ate='',local='',numero='',fck='',peca=''}){
   const busca=numero.trim().toLocaleLowerCase('pt-BR');

@@ -100,7 +100,7 @@ export function criarDados(cliente) {
       const c=conectar();
       const [obras,locais,notas]=await Promise.all([
         todos(c.from('obras').select('id,nome,tipo')),
-        todos(c.from('locais').select('id,obra_id,nome,teorico')),
+        todos(c.from('locais').select('id,obra_id,nome,teorico,created_at')),
         todos(c.from('notas').select('id,obra_id,local_id,numero,data,fck,slump,volume,peca_estrutural,observacoes,versao,nao_estrutural,ensaios(idade,esperado,resultado_1,resultado_2)'))
       ]);
       return {obras:obras.sort((a,b)=>a.nome.localeCompare(b.nome)),locais:locais.map(l=>({...l,teorico:l.teorico===null?null:Number(l.teorico)})),notas:notas.map(n=>{

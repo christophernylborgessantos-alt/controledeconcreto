@@ -105,3 +105,7 @@ Duas opções internas. Aplicado vs teórico mantém o comparativo e filtros exi
 Filtros cruzados por obra, período de aplicação, local, peça, FCKs, meses, idades, situações e faixas; seleção múltipla OR por dimensão e AND entre dimensões. Clique novamente remove, etiquetas ativas permitem limpar individualmente, Limpar filtros restaura a obra e trocar obra reinicia. Categorias permanecem disponíveis para seleção. Impressão/PDF usa seleção atual. Layout responsivo e controles por teclado. Guia de fórmulas e denominadores em docs/dashboard-visao-geral.md. Sem novos dados persistidos.
 
 Visão geral: indicador superior Volume aplicado em m³ substitui Pendências e segue as notas filtradas. Ordem inicial dos gráficos: Concretagens por mês e Resistência/FCK28; FCK×resistência28 ocupa a posição anterior da rosca de resistência; evolução da resistência ocupa a posição anterior das concretagens. Tabela de pendências preservada.
+
+Aplicado vs teórico: locais ordenados em Estacas, Contenção, Fundações, Térreo, 1º, 2º, 3º, 4º pavimento Lazer, 5º pavimento Tipo. Próximos locais aparecem depois em ordem crescente de cadastro, pelo created_at do local. A ordem vale na tabela, seletor de local e impressão; filtros e totais preservados.
+
+Formulário de notas: após salvar, permanece aberto com confirmação e versão atualizada para próximas edições. Rodapé com Salvar nota, Inserir nova nota (rascunho limpo) e Fechar; botão superior Fechar preservado. Erros mantêm campos; ações bloqueadas durante gravação.

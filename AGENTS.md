@@ -179,3 +179,15 @@ Código 958ebbe9e8e6744ccfd9b466753cc8a8cc9616af enviado à main. Deployment dpl
 - Concretagens por mês trocou de posição com Resistência ao longo do tempo; Resistência/FCK28 trocou com FCK×resistência28. Filtros interativos mantidos nos respectivos gráficos. Renderização DEMO conferiu ordem e volume8,5m³. Sem banco/push/publicação.
 
 - Publicação deste ajuste de volume e posições autorizada expressamente pelo usuário em01/11/2026; escopo e verificação em PUBLICACAO.md.
+
+## Ordem dos locais em Aplicado vs teórico — 05/11/2026
+- Ordem solicitada: Estacas, Contenção, Fundações, Térreo, 1º, 2º, 3º, 4º pavimento Lazer e 5º pavimento Tipo. Nomes são reconhecidos sem diferença de maiúsculas/acentos e comº/°. Outros locais entram depois, por data de cadastro crescente (primeiro cadastrado acima).
+- Aplicado somente ao painel Aplicado vs teórico, seu seletor e impressão. dados.js lê locais.created_at já existente; sem migration/alteração de registros. Ordenação não modifica array compartilhado nem totais. Regressões de ordem/novos locais/leitura de created_at e renderização DEMO conferidas. Alteração local, ainda sem push/publicação.
+
+## Formulário de notas permanece aberto — 05/11/2026
+- Salvar nota mantém modal aberto com os valores e confirmação da NF salva. Versão local avança conforme RPC (nova1, edição+1), permitindo salvar novamente como edição sem duplicar. Retorno ausente não confirma sucesso.
+- Ao lado de Salvar nota, Inserir nova nota limpa e abre novo rascunho e Fechar encerra o modal. Fechar superior permanece disponível; ações bloqueadas durante gravação. Falha mantém campos.
+- UI DEMO com API interceptada em memória verificou criação, segunda gravação com versão, nova nota, erro e fechamento. Nenhuma nota real gravada. Alteração local, sem publicação; ordenação de locais anterior também continua pendente de publicação.
+
+### Publicação autorizada — locais e formulário de notas, 05/11/2026
+- Usuário autorizou publicar os dois ajustes pendentes, com validações em PUBLICACAO.md. As anotações locais anteriores descrevem o estado anterior à publicação.

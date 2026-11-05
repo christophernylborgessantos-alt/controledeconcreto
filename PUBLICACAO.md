@@ -77,3 +77,11 @@ Revisão independente sem bloqueios. npm run check passou; regressões cobrem fi
 Indicador superior de Pendências substituído por Volume aplicado de concreto em m³, seguindo as notas filtradas. Concretagens por mês trocou de posição com Resistência ao longo do tempo; Resistência/FCK28 trocou com FCK×resistência28. Filtros e tabela de pendências preservados.
 
 Renderização DEMO confirmou o valor8,5m³ e a ordem dos gráficos. npm run check passou. Sem alteração de banco ou lançamentos reais. Usuário autorizou publicar este ajuste.
+
+## Publicação autorizada — locais e formulário de notas, 05/11/2026
+
+Locais do Aplicado vs teórico na sequência Estacas, Contenção, Fundações, Térreo, 1º, 2º, 3º, 4º pavimento Lazer, 5º pavimento Tipo; demais locais por cadastro crescente. Leitura de created_at existente, sem migration. Tabela, seletor e impressão compartilham a ordenação.
+
+Salvar nota mantém o formulário aberto e avança a versão para permitir edição sem duplicar. Rodapé oferece Salvar nota, Inserir nova nota e Fechar. Falhas preservam preenchimento. UI DEMO com API falsa verificou criação/edição/nova nota/erro/fechamento, sem notas reais gravadas.
+
+npm run check passou. Revisão independente dos dois ajustes sem bloqueios. Usuário autorizou publicação conjunta; nenhum dado de negócio ou conta real foi alterado pelo agente.

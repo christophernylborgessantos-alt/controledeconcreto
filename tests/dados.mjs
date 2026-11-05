@@ -7,7 +7,7 @@ const dados = modulo.criarDados(cliente);
 await assert.rejects(dados.salvarNota({id:'n',obra_id:'o',local_id:'l',numero:'1',data:'2026-10-11',volume:1,fck:30,versao:1}), /Recarregue/);
 await assert.rejects(dados.salvarEnsaios({id:'n',versao:1,ensaios:{7:{esperado:null,resultados:[-1,0]}}}), /resistências/);
 const tabelas = {
-  obras: [], locais: [], notas: [{id:'n',obra_id:'o',local_id:'l',numero:'1',volume:'0.1',fck:'30',peca_estrutural:'Pilar P12',versao:2,ensaios:[7,28,63].map(idade=>({idade,esperado:null,resultado_1:idade===7?0:null,resultado_2:null}))}],
+  obras: [], locais: [{id:'l',obra_id:'o',nome:'Local',teorico:null,created_at:'2026-11-05T10:00:00Z'}], notas: [{id:'n',obra_id:'o',local_id:'l',numero:'1',volume:'0.1',fck:'30',peca_estrutural:'Pilar P12',versao:2,ensaios:[7,28,63].map(idade=>({idade,esperado:null,resultado_1:idade===7?0:null,resultado_2:null}))}],
   ensaios: [7,28,63].map(idade => ({nota_id:'n',idade,esperado:null,resultado_1:idade===7?0:null,resultado_2:null}))
 };
 // As resistências antigas não podem ser combinadas com a versão nova da nota.
@@ -16,8 +16,9 @@ function consulta(lista,error=null){return {
   then:(resolve,reject)=>Promise.resolve({data:lista?.slice(0,1000)??null,error}).then(resolve,reject),
   order(){return this},range(inicio,fim){return Promise.resolve({data:lista?.slice(inicio,fim+1)??null,error})}
 }}
-const leitura = modulo.criarDados({from: tabela => ({select: () => consulta(tabelas[tabela])})});
+const leitura = modulo.criarDados({from: tabela => ({select: colunas => {if(tabela==='locais')assert.ok(colunas.split(',').includes('created_at'),'Data de cadastro deve vir do banco');return consulta(tabelas[tabela])}})});
 const resultado = await leitura.carregar();
+assert.equal(resultado.locais[0].created_at,'2026-11-05T10:00:00Z');
 assert.equal(resultado.notas[0].volume,0.1);assert.equal(resultado.notas[0].peca_estrutural,'Pilar P12');
 assert.deepEqual(resultado.notas[0].ensaios[7],{esperado:21,resultados:[0,null]});
 const falha = modulo.criarDados({from: () => ({select: () => consulta(null,{message:'rede'})})});
