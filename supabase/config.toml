@@ -1,2 +1,5 @@
 [functions.usuarios]
 verify_jwt = true
+
+[functions.relatorios-drive]
+verify_jwt = true

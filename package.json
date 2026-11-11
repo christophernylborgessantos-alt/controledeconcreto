@@ -6,16 +6,19 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint src supabase/functions/usuarios/handler.js",
+    "lint": "eslint src supabase/functions/usuarios/handler.js supabase/functions/relatorios-drive/handler.js",
     "preview": "vite preview",
     "check": "npm run build && npm run lint && node tests/run.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "latest",
+    "@tesseract.js-data/eng": "1.0.0",
     "exceljs": "4.4.0",
     "jszip": "3.10.2",
+    "pdfjs-dist": "6.5.438",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "tesseract.js": "7.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9",

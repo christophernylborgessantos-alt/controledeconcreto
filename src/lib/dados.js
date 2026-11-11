@@ -35,16 +35,20 @@ export function criarDados(cliente) {
     if (!cliente) throw Error('Configure a conexão Supabase para entrar no sistema.');
     return cliente;
   }
-  async function gestao(body){
-    const {data,error}=await conectar().functions.invoke('usuarios',{body});
+  async function chamarFuncao(nome,body,fallback){
+    const {data,error}=await conectar().functions.invoke(nome,{body});
     if(error){
-      let mensagem='Não foi possível concluir a gestão de usuários. Entre novamente ou tente recarregar.';
+      let mensagem=fallback;
       if(error.context?.json){try{mensagem=(await error.context.json()).erro||mensagem}catch{/* Resposta de erro sem JSON. */}}
       throw Error(mensagem);
     }
     return data;
   }
+  const gestao=body=>chamarFuncao('usuarios',body,'Não foi possível concluir a gestão de usuários. Entre novamente ou tente recarregar.');
+  const drive=body=>chamarFuncao('relatorios-drive',body,'Não foi possível consultar os laudos do Drive. Confira a configuração da obra e tente novamente.');
   return {
+    listarRelatoriosDrive:obra=>drive({acao:'listar',obra}),
+    baixarRelatorioDrive:(obra,id)=>drive({acao:'baixar',obra,id}),
     async importarEnsaios(obra,linhas){
       if(!obra||!Array.isArray(linhas)||!linhas.length||linhas.length>500)throw Error('Selecione a obra e atualize entre 1 e 500 notas.');
       return conferir(conectar().rpc('importar_resultados_ensaios',{p_obra:obra,p_linhas:linhas}));
@@ -145,4 +149,4 @@ export function criarDados(cliente) {
     }
   };
 }
-export const {importarEnsaios,listarObrasUsuarios,listarObrasUsuario,liberarObrasUsuario,excluirUsuario,importarNotas,listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);
+export const {listarRelatoriosDrive,baixarRelatorioDrive,importarEnsaios,listarObrasUsuarios,listarObrasUsuario,liberarObrasUsuario,excluirUsuario,importarNotas,listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);
