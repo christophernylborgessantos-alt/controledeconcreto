@@ -1,10 +1,11 @@
-import {useState} from 'react';
-import {baixarRelatorioDrive, importarEnsaios, listarRelatoriosDrive} from '../lib/dados.js';
+import {useEffect, useState} from 'react';
+import {baixarRelatorioDrive, importarLaudo, listarRelatoriosDrive, obterUltimoUploadLaudo} from '../lib/dados.js';
 import {previaLaudo} from '../lib/previaLaudo.js';
 import '../importacao.css';
 
 const campos = ['7 dias R1', '7 dias R2', '28 dias R1', '28 dias R2', '63 dias R1', '63 dias R2'];
 const formatar = valor => valor == null ? '—' : valor.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:6});
+const dataUpload = new Intl.DateTimeFormat('pt-BR', {dateStyle:'short', timeStyle:'short', timeZone:'America/Sao_Paulo'});
 
 export default function UploadLaudos({data, obra, commit}) {
   const [origem, setOrigem] = useState('drive');
@@ -15,8 +16,20 @@ export default function UploadLaudos({data, obra, commit}) {
   const [conferida, setConferida] = useState(false);
   const [atividade, setAtividade] = useState('');
   const [erro, setErro] = useState('');
+  const [ultimo, setUltimo] = useState(undefined);
+  const [erroUltimo, setErroUltimo] = useState('');
   const previa = leitura?.previa;
   const temErros = previa?.errosGerais.length || previa?.linhas.some(l => l.status === 'Erro');
+
+  useEffect(() => {
+    let ativo = true;
+    obterUltimoUploadLaudo(obra).then(registro => {
+      if (ativo) setUltimo(atual => atual ?? registro);
+    }).catch(() => {
+      if (ativo) setErroUltimo('Não foi possível consultar o último upload.');
+    });
+    return () => { ativo = false; };
+  }, [obra]);
 
   function limparPrevia() {
     setLeitura(null);
@@ -25,11 +38,13 @@ export default function UploadLaudos({data, obra, commit}) {
   }
 
   async function listar() {
+    setOrigem('drive');
     limparPrevia();
+    setId('');
+    setLista(null);
     setAtividade('Consultando a pasta no Google Drive…');
     try {
       setLista(await listarRelatoriosDrive(obra));
-      setId('');
     } catch (e) {
       setErro(e.message);
     } finally {
@@ -58,7 +73,10 @@ export default function UploadLaudos({data, obra, commit}) {
     setErro('');
     setAtividade('Atualizando os ensaios…');
     try {
-      await commit(() => importarEnsaios(obra, previa.atualizacoes), `Resultados atualizados em ${previa.atualizacoes.length} nota(s).`);
+      await commit(async () => {
+        const registro = await importarLaudo(obra, previa.atualizacoes, leitura.nome, origem);
+        setUltimo(registro);
+      }, `Resultados atualizados em ${previa.atualizacoes.length} nota(s).`);
       limparPrevia();
     } catch (e) {
       setErro(e.message);
@@ -74,11 +92,14 @@ export default function UploadLaudos({data, obra, commit}) {
       <div className="dashboard-view-switch" role="group" aria-label="Origem do laudo">
         {[['drive','Google Drive'], ['local','PDF do computador']].map(([chave, nome]) =>
           <button key={chave} type="button" className={origem === chave ? 'primary' : ''} aria-pressed={origem === chave}
-            disabled={!!atividade} onClick={() => { setOrigem(chave); setLocal(null); limparPrevia(); }}>{nome}</button>
+            disabled={!!atividade} onClick={chave === 'drive' ? listar : () => {
+              if (origem === 'local') return;
+              setOrigem('local'); setLocal(null); limparPrevia();
+            }}>{nome}</button>
         )}
       </div>
       {origem === 'drive' ? <>
-        <button type="button" disabled={!!atividade} onClick={listar}>{lista ? 'Atualizar lista do Drive' : 'Consultar pasta da obra'}</button>
+        {!lista && !atividade && !erro && <p>Clique em Google Drive para consultar os laudos da obra.</p>}
         {lista && (lista.arquivos.length ? <label>Laudo PDF
           <select value={id} disabled={!!atividade} onChange={e => { setId(e.target.value); limparPrevia(); }}>
             <option value="">Selecione um laudo</option>
@@ -93,6 +114,13 @@ export default function UploadLaudos({data, obra, commit}) {
       <button type="button" className="primary" disabled={!!atividade || !(origem === 'drive' ? id : local)} onClick={ler}>Ler PDF e conferir resultados</button>
       {atividade && <p role="status">{atividade}</p>}
       {erro && <p role="alert" className="import-error">{erro}</p>}
+    </section>
+    <section className="card" aria-labelledby="ultimo-upload-laudo">
+      <h3 id="ultimo-upload-laudo">Último upload confirmado</h3>
+      {ultimo ? <>
+        <p className="laudo-arquivo"><strong>{ultimo.arquivo}</strong></p>
+        <p>{ultimo.origem === 'drive' ? 'Google Drive' : 'PDF do computador'} · {dataUpload.format(new Date(ultimo.confirmado_em))} · {ultimo.notas_atualizadas} nota(s) atualizada(s)</p>
+      </> : <p role="status">{erroUltimo || (ultimo === undefined ? 'Consultando o último upload…' : 'Ainda não há upload de laudo registrado nesta obra.')}</p>}
     </section>
     {previa && <section className="card">
       <h3>Conferência do laudo</h3>

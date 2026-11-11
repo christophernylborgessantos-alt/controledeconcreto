@@ -32,6 +32,24 @@ const cliente = criarDados({functions:{invoke:async (nome,{body}) => {
 assert.equal((await cliente.listarRelatoriosDrive(obra)).arquivos[0].id, arquivo);
 assert.equal(await cliente.baixarRelatorioDrive(obra, arquivo), blob);
 
+const ultimo = {arquivo:'laudo.pdf', origem:'drive', confirmado_em:'2026-11-11T12:00:00Z', notas_atualizadas:1};
+const uploads = criarDados({
+  from(tabela) {
+    assert.equal(tabela, 'ultimo_upload_laudo');
+    return {select:() => ({eq:(campo, valor) => {
+      assert.deepEqual([campo, valor], ['obra_id', obra]);
+      return {maybeSingle:async () => ({data:ultimo})};
+    }})};
+  },
+  async rpc(nome, params) {
+    assert.equal(nome, 'importar_laudo');
+    assert.deepEqual(params, {p_obra:obra, p_linhas:previa.atualizacoes, p_arquivo:'laudo.pdf', p_origem:'drive'});
+    return {data:ultimo};
+  }
+});
+assert.equal(await uploads.obterUltimoUploadLaudo(obra), ultimo);
+assert.equal(await uploads.importarLaudo(obra, previa.atualizacoes, 'laudo.pdf', 'drive'), ultimo);
+
 let role = 'Analista', vinculo = true, pai = pasta, downloads = 0;
 const handler = criarHandler({
   cliente: () => ({

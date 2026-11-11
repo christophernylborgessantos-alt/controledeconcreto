@@ -69,5 +69,12 @@
     "ativo",
     "created_at",
     "gestor_usuarios"
+  ],
+  "ultimo_upload_laudo": [
+    "obra_id",
+    "arquivo",
+    "origem",
+    "confirmado_em",
+    "notas_atualizadas"
   ]
 }

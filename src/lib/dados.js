@@ -49,6 +49,10 @@ export function criarDados(cliente) {
   return {
     listarRelatoriosDrive:obra=>drive({acao:'listar',obra}),
     baixarRelatorioDrive:(obra,id)=>drive({acao:'baixar',obra,id}),
+    obterUltimoUploadLaudo:obra=>conferir(conectar().from('ultimo_upload_laudo').select('arquivo,origem,confirmado_em,notas_atualizadas').eq('obra_id',obra).maybeSingle()),
+    importarLaudo:(obra,linhas,arquivo,origem)=>conferir(conectar().rpc('importar_laudo',{
+      p_obra:obra,p_linhas:linhas,p_arquivo:arquivo,p_origem:origem
+    })),
     async importarEnsaios(obra,linhas){
       if(!obra||!Array.isArray(linhas)||!linhas.length||linhas.length>500)throw Error('Selecione a obra e atualize entre 1 e 500 notas.');
       return conferir(conectar().rpc('importar_resultados_ensaios',{p_obra:obra,p_linhas:linhas}));
@@ -149,4 +153,4 @@ export function criarDados(cliente) {
     }
   };
 }
-export const {listarRelatoriosDrive,baixarRelatorioDrive,importarEnsaios,listarObrasUsuarios,listarObrasUsuario,liberarObrasUsuario,excluirUsuario,importarNotas,listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);
+export const {obterUltimoUploadLaudo,importarLaudo,listarRelatoriosDrive,baixarRelatorioDrive,importarEnsaios,listarObrasUsuarios,listarObrasUsuario,liberarObrasUsuario,excluirUsuario,importarNotas,listarMapas,obterMapa,salvarMapa,excluirMapa,entrar,sair,definirSenha,recuperarSenha,sessaoAtual,observarSessao,perfil,carregar,salvarNota,salvarEnsaios,excluirNota,excluirObra,salvarTeorico,salvarObra,salvarLocal,listarUsuarios,convidarUsuario,alterarUsuario,gerarLinkAcesso}=criarDados(supabase);
