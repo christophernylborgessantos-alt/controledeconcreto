@@ -13,3 +13,4 @@ import './importacao.mjs';
 import './importacao-ensaios.mjs';
 import './usuarios-acessos.mjs';
 import './laudos.mjs';
+import './laudo-layout.mjs';

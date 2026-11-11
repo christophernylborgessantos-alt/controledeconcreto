@@ -1,5 +1,5 @@
 const larguraModelo = 1850;
-const colunas = [[99,193], [1493,1548], [1628,1683], [1763,1817]];
+const idades = [7,28,63];
 const formato = 'Formato de laudo não reconhecido. Use o formulário FOR 017 02, com todas as páginas legíveis.';
 
 export async function extrairPagina(pagina, numero, criarCanvas, reconhecer) {
@@ -39,6 +39,56 @@ export async function extrairPagina(pagina, numero, criarCanvas, reconhecer) {
     throw Error(`Página ${numero}. ${formato}`);
   }
 
+  // A quantidade de idades no cabeçalho muda a posição das colunas de MPa.
+  const inicioDados = limites[0];
+  const separadores = [];
+  for (let y = inicioDados - px(145); y < inicioDados - px(4); y++) {
+    let pontos = 0;
+    for (let x = px(1780); x < px(1810); x++) pontos += Number(escuro(x, y));
+    if (pontos > px(24) && y - (separadores.at(-1) ?? 0) > px(4)) separadores.push(y);
+  }
+  const [inicioIdades, fimIdades, inicioUnidades] = separadores.slice(-3);
+  const erroColunas = `Página ${numero}. Não foi possível identificar as colunas de MPa de 7, 28 e 63 dias.`;
+  if (!inicioUnidades) throw Error(erroColunas);
+
+  function bordasVerticais(topo, base) {
+    const bordas = [];
+    for (let x = px(1200); x < px(1835); x++) {
+      let pontos = 0;
+      for (let y = topo + px(4); y < base - px(4); y++) pontos += Number(escuro(x, y));
+      if (pontos > (base - topo - px(8)) * 0.85 && x - (bordas.at(-1) ?? 0) > px(4)) bordas.push(x);
+    }
+    return bordas;
+  }
+
+  async function lerRotulo(esquerda, direita, topo, base) {
+    const margem = px(4);
+    const rotulo = criarCanvas(direita - esquerda, base - topo);
+    const ctx = rotulo.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, rotulo.width, rotulo.height);
+    recortar(ctx, esquerda + margem, topo + margem, rotulo.width - 2 * margem, rotulo.height - 2 * margem, margem, margem);
+    return (await reconhecer(rotulo, false)).text.replace(/[^a-z0-9]/gi, '').toLowerCase();
+  }
+
+  const grupos = bordasVerticais(inicioIdades, fimIdades);
+  const unidades = bordasVerticais(inicioUnidades, inicioDados);
+  const resistenciaPorIdade = new Map();
+  for (let i = 1; i < grupos.length; i++) {
+    const esquerda = grupos[i - 1];
+    const direita = grupos[i];
+    const rotulo = await lerRotulo(esquerda, direita, inicioIdades, fimIdades);
+    const idade = idades.find(valor => rotulo === `${valor}dias`);
+    if (!idade) continue;
+    const fim = unidades.findIndex(x => Math.abs(x - direita) <= px(3));
+    const meio = unidades[fim - 1];
+    if (fim < 1 || meio <= esquerda + px(8) || resistenciaPorIdade.has(idade) ||
+        await lerRotulo(meio, unidades[fim], inicioUnidades, inicioDados) !== 'mpa') throw Error(erroColunas);
+    resistenciaPorIdade.set(idade, [meio, unidades[fim]]);
+  }
+  if (resistenciaPorIdade.size !== idades.length) throw Error(erroColunas);
+  const colunas = [[px(99),px(193)], ...idades.map(idade => resistenciaPorIdade.get(idade))];
+
   const passoX = px(160);
   const passoY = px(60);
   const imagem = criarCanvas(passoX * 4, passoY * (limites.length - 1) * 2);
@@ -55,8 +105,8 @@ export async function extrairPagina(pagina, numero, criarCanvas, reconhecer) {
     notas.push(nota);
     for (const [coluna, [esquerda, direita]] of colunas.entries()) {
       for (let amostra = 0; amostra < (coluna === 0 ? 1 : 2); amostra++) {
-        const x = px(esquerda + 4);
-        const w = px(direita - esquerda - 8);
+        const x = esquerda + px(4);
+        const w = direita - esquerda - px(8);
         const y = (amostra === 0 ? topo : meio) + px(4);
         const h = (coluna === 0 || amostra === 1 ? fim : meio) - px(4) - y;
         let primeiro = h, ultimo = -1;
@@ -98,7 +148,7 @@ export async function extrairPagina(pagina, numero, criarCanvas, reconhecer) {
     else if (coluna > 0 && valido && /^\d{1,3}[.,]\d{2}$/.test(valor)) {
       nota.resultados[(coluna - 1) * 2 + amostra] = Number(valor.replace(',', '.'));
     } else {
-      nota.erros.push(coluna === 0 ? 'NF ilegível' : `${[7,28,63][coluna - 1]} dias, R${amostra + 1} ilegível`);
+      nota.erros.push(coluna === 0 ? 'NF ilegível' : `${idades[coluna - 1]} dias, R${amostra + 1} ilegível`);
     }
   }
   return notas;
